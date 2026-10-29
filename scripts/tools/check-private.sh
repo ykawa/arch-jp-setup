@@ -32,7 +32,7 @@ if [ -f "$PRIVATE_WORDS_FILE" ]; then
     while IFS= read -r word; do
         [ -n "$word" ] && [ "${word#\#}" = "$word" ] || continue
         # 正規表現として解釈されないようにエスケープする
-        patterns+=("$(printf '%s' "$word" | sed 's/[][\.*^$+?(){}|/]/\\&/g')")
+        patterns+=("$(printf '%s' "$word" | sed 's/[][\.*^$+?(){}|]/\\&/g')")
     done < "$PRIVATE_WORDS_FILE"
 fi
 pattern=$(IFS='|'; echo "${patterns[*]}")

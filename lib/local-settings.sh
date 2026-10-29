@@ -1,10 +1,12 @@
 #!/bin/bash
 # PC ごとの設定（リポジトリには入れず、INSTALL_DIR のコピーにだけ反映する値）
 #
-# 選んだ値は ~/.config/arch-jp-setup/ に保存し、再実行時の初期値にする。
+# 値は ~/.config/arch-jp-setup/ のファイルに置く。ファイルがなければ何もしない。
 #   avatar                     … "<種類> <値>"（github <アカウント> / url <URL> / file <パス> / none）
+#                                setup.sh の TUI で選ぶ（再実行時の初期値にもなる）
 #   zed-file-scan-inclusions   … Zed の file_scan_inclusions に入れる glob（カンマ区切り）
 #   git-ignore-local           … グローバル gitignore に足す個人用パターン（1行1パターン）
+# zed-file-scan-inclusions と git-ignore-local は外部フック（lib/hooks.sh）などが書く。
 
 LOCAL_SETTINGS_DIR="$HOME/.config/arch-jp-setup"
 AVATAR_SETTING_FILE="$LOCAL_SETTINGS_DIR/avatar"
@@ -80,22 +82,6 @@ select_avatar_source() {
     esac
 }
 
-# Zed の file_scan_inclusions（.gitignore されていても検索対象にする glob）を入力する
-select_zed_file_scan_inclusions() {
-    local saved value
-    saved=$(_read_setting "$ZED_INCLUSIONS_SETTING_FILE")
-
-    if ! _can_prompt; then
-        [ -f "$ZED_INCLUSIONS_SETTING_FILE" ] || _write_setting "$ZED_INCLUSIONS_SETTING_FILE" ""
-        return 0
-    fi
-
-    value=$(gum input \
-        --header "Zed: .gitignore されていても検索対象にする glob（カンマ区切り、空なら無し）" \
-        --placeholder "*memo*, *.local.md" \
-        --value "$saved" </dev/tty) || return 1
-    _write_setting "$ZED_INCLUSIONS_SETTING_FILE" "$value"
-}
 
 # 保存した取得元から INSTALL_DIR/images/avatar.png を用意する（失敗しても止めない）
 fetch_avatar_image() {
@@ -149,22 +135,6 @@ apply_zed_file_scan_inclusions() {
     sed -i "s|^\([[:space:]]*\"file_scan_inclusions\":\).*|\1 [${json}],|" "$settings"
 }
 
-# グローバル gitignore に足す個人用パターン（自分の名前を含むメモファイルなど）を入力する
-select_git_ignore_local() {
-    local saved value
-    saved=$(_read_setting "$GIT_IGNORE_LOCAL_SETTING_FILE")
-
-    if ! _can_prompt; then
-        [ -f "$GIT_IGNORE_LOCAL_SETTING_FILE" ] || _write_setting "$GIT_IGNORE_LOCAL_SETTING_FILE" ""
-        return 0
-    fi
-
-    value=$(gum write \
-        --header "git: 全リポジトリで無視する個人用パターン（1行1パターン、空なら無し。ctrl+d で決定）" \
-        --placeholder "*.memo" \
-        --value "$saved" </dev/tty) || return 1
-    _write_setting "$GIT_IGNORE_LOCAL_SETTING_FILE" "$value"
-}
 
 # INSTALL_DIR のコピーにある dot.config/git/ignore のマーカー間を保存したパターンで置き換える
 apply_git_ignore_local() {
@@ -185,4 +155,15 @@ apply_git_ignore_local() {
         !skip { print }
     ' "$ignore_file" > "$ignore_file.tmp"
     mv "$ignore_file.tmp" "$ignore_file"
+}
+
+# 保存した値を INSTALL_DIR のコピーへ反映する（値ファイルがなければ何もしない）
+apply_local_settings() {
+    local install_dir="$1"
+    if [ -f "$ZED_INCLUSIONS_SETTING_FILE" ] && [ -f "$install_dir/dot.config/zed/settings.json" ]; then
+        apply_zed_file_scan_inclusions "$install_dir/dot.config/zed/settings.json"
+    fi
+    if [ -f "$GIT_IGNORE_LOCAL_SETTING_FILE" ] && [ -f "$install_dir/dot.config/git/ignore" ]; then
+        apply_git_ignore_local "$install_dir/dot.config/git/ignore"
+    fi
 }

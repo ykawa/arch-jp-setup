@@ -156,14 +156,12 @@ export PATH="/opt/bin:$HOME/bin:$PATH"
 # -- mise
 export PATH="$HOME/.local/bin:$PATH"
 if builtin type mise >/dev/null 2>&1; then
-  export MISE_CEILING_PATHS=/sio:/nas
   export MISE_HOOK_ENV_CHPWD_ONLY=1
   export MISE_HOOK_ENV_CACHE_TTL=60s
 
   eval "$(mise activate bash)"
 
   export PATH="$HOME/.local/bin:$PATH"
-  export MISE_CEILING_PATHS=/sio:/nas
   export MISE_HOOK_ENV_CHPWD_ONLY=1
   export MISE_HOOK_ENV_CACHE_TTL=60s
 fi

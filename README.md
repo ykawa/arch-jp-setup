@@ -17,6 +17,18 @@ curl -fsSL https://raw.githubusercontent.com/ykawa/arch-jp-setup/main/install.sh
 bash ~/.local/share/arch-jp-setup/scripts/tools/writeback.sh <git の作業ディレクトリ>
 ```
 
+個人用の設定（自分の名前を含む gitignore パターン、NAS 前提の設定など）はこのリポジトリに入れず、
+`~/.config/arch-jp-setup/hooks.d/*.sh` に置いたフックで適用する。フックは `setup.sh` と
+`scripts/link-configs.sh` の最後に実行され、次のファイルを書けばコピーに反映される。
+
+| ファイル（`~/.config/arch-jp-setup/`） | 内容 |
+|---|---|
+| `git-ignore-local` | グローバル gitignore に足すパターン（1行1パターン） |
+| `zed-file-scan-inclusions` | Zed の `file_scan_inclusions`（カンマ区切り） |
+| `private-words` | 公開リポジトリへの混入を検出する語（`check-private.sh`） |
+
+シェルや git の個人設定は `~/.bashrc_local`、`~/.zshrc_local`、`~/.config/git/config.local` に置く。
+
 ## 📋 前提条件
 
 - arch系linux （niri 推奨）がインストールされていること

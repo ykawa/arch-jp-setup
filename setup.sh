@@ -13,6 +13,7 @@ source "$SCRIPT_DIR/lib/virt-detect.sh" 2>/dev/null || true
 source "$SCRIPT_DIR/lib/package-groups.sh"
 source "$SCRIPT_DIR/lib/install-copy.sh"
 source "$SCRIPT_DIR/lib/local-settings.sh"
+source "$SCRIPT_DIR/lib/hooks.sh"
 
 # リポジトリ（git clone や開発用の作業ディレクトリ）から実行された場合は、
 # INSTALL_DIR にコピーしてからそちらで実行し直す。設定ファイルのリンクはすべて INSTALL_DIR を指す。
@@ -78,17 +79,10 @@ main() {
     done < "$GROUP_SELECTION_FILE"
 
     # PC ごとの設定（INSTALL_DIR のコピーにだけ反映する）
-    select_git_ignore_local || { log_message "git ignore setting cancelled. Aborting setup."; exit 1; }
     if [ "$CURRENT_DE" = "niri" ]; then
         select_avatar_source || { log_message "Avatar selection cancelled. Aborting setup."; exit 1; }
         log_message "Noctalia avatar: $(cat "$AVATAR_SETTING_FILE")"
     fi
-    for script in "$SCRIPT_DIR"/scripts/common/*-zed.sh; do
-        if is_group_selected "$script"; then
-            select_zed_file_scan_inclusions || { log_message "Zed setting cancelled. Aborting setup."; exit 1; }
-            log_message "Zed file_scan_inclusions: $(cat "$ZED_INCLUSIONS_SETTING_FILE")"
-        fi
-    done
 
     log_message ""
     log_message "================================"
@@ -183,6 +177,13 @@ main() {
             log_message ""
         fi
     done
+
+    log_message ""
+    log_message "================================"
+    log_message "  External Hooks"
+    log_message "================================"
+    log_message ""
+    run_hooks "$SCRIPT_DIR" setup 2>&1 | tee -a "$HOME/setup.log"
 
     log_message ""
     log_message "======================================"

@@ -8,6 +8,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$REPO_ROOT/lib/link-config.sh"
 source "$REPO_ROOT/lib/install-copy.sh"
 source "$REPO_ROOT/lib/local-settings.sh"
+source "$REPO_ROOT/lib/hooks.sh"
 
 # リンク元は INSTALL_DIR のコピー（リポジトリから実行されたらコピーしてから実行し直す）
 if [ "$REPO_ROOT" != "$INSTALL_DIR" ]; then
@@ -24,12 +25,7 @@ echo ""
 mkdir -p "$HOME/.config"
 
 # コピーし直すと PC ごとの値が消えるので、保存済みの設定から再適用する
-if [ -f "$ZED_INCLUSIONS_SETTING_FILE" ]; then
-    apply_zed_file_scan_inclusions "$REPO_ROOT/dot.config/zed/settings.json"
-fi
-if [ -f "$GIT_IGNORE_LOCAL_SETTING_FILE" ]; then
-    apply_git_ignore_local "$REPO_ROOT/dot.config/git/ignore"
-fi
+apply_local_settings "$REPO_ROOT"
 if [ -f "$AVATAR_SETTING_FILE" ]; then
     fetch_avatar_image "$REPO_ROOT"
 fi
@@ -49,6 +45,9 @@ for item in "$REPO_ROOT/dot."*; do
     dirname="${basename#dot.}"
     link_dothome "$dirname" "$REPO_ROOT"
 done
+
+echo ""
+run_hooks "$REPO_ROOT" link-configs
 
 echo ""
 echo "================================"

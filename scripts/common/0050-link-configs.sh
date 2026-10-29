@@ -16,9 +16,9 @@ echo ""
 
 mkdir -p "$HOME/.config"
 
-# 個人用の gitignore パターンは INSTALL_DIR のコピーにだけ書き込む
+# PC ごとの値（gitignore の個人用パターンなど）は INSTALL_DIR のコピーにだけ書き込む
 if [ "$REPO_ROOT" = "$INSTALL_DIR" ]; then
-    apply_git_ignore_local "$REPO_ROOT/dot.config/git/ignore"
+    apply_local_settings "$REPO_ROOT"
 fi
 
 # dot.config/<name> → ~/.config/<name>
