@@ -1,0 +1,134 @@
+# Noctalia v5 configuration (migrated from v4 settings.json)
+# https://noctalia.dev/noctalia/configuration/
+# GUI changes are saved to ~/.local/state/noctalia/settings.toml and win over this file.
+
+[shell]
+font_family = "Meiryo UI"
+# 画像はセットアップ時に選んだ取得元から用意する（lib/local-settings.sh）
+avatar_path = "~/.local/share/arch-jp-setup/images/avatar.png"
+# v4: autoPasteClipboard = false; selecting an entry only copies it
+clipboard_auto_paste = "off"
+
+[shell.launcher]
+# Full layout (view tabs, profile, toolbar); width range is 560-1100.
+# For a v4-like centered list, use layout = "simple" (fixed 560x500)
+layout = "full"
+width = 1100
+search_position = "top"
+categories = true
+app_grid = false
+sort_by_usage = true
+auto_paste = "off"
+
+[accessibility]
+# Enlarge launcher, clipboard, control center and other panels (bar is unaffected);
+# the clipboard panel has no size option of its own
+ui_scale = 1.0
+
+[theme]
+mode = "dark"
+# v4: predefinedScheme = "Tokyo Night Moon" (useWallpaperColors = false);
+# the v4 colorscheme JSON is reused as-is from palettes/
+source = "custom"
+custom_palette = "Tokyo Night Moon"
+
+[theme.templates]
+# v4 had no app templates enabled; keep apps untouched
+builtin_ids = []
+community_ids = []
+
+[wallpaper]
+enabled = true
+directory = "~/Pictures/Wallpapers"
+
+[bar.default]
+position = "bottom"
+capsule = true
+background_opacity = 0.93
+# v4: floating bar with 4px margins on every side
+margin_edge = 4
+margin_ends = 4
+start = [ "launcher", "taskbar", "media" ]
+center = [ "workspaces" ]
+end = [
+    "cpu",
+    "temp",
+    "ram",
+    "clock",
+    "tray",
+    "notifications",
+    "battery",
+    "volume",
+    "brightness",
+    "control-center",
+]
+
+[widget.launcher]
+glyph = "rocket"
+
+[widget.taskbar]
+# v4: showTitle = true, titleWidth = 120, iconScale = 0.8
+show_window_title = true
+window_title_max_width = 120
+icon_scale = 0.8
+
+[widget.media]
+# v4: showArtistFirst, maxWidth = 145, hidden when nothing is playing
+artist_first = true
+max_length = 145
+hide_when_no_media = true
+
+[widget.workspaces]
+labels_only_when_occupied = true
+
+[widget.cpu]
+type = "sysmon"
+stat = "cpu_usage"
+
+[widget.temp]
+type = "sysmon"
+stat = "cpu_temp"
+
+[widget.ram]
+type = "sysmon"
+stat = "ram_used"
+
+[widget.clock]
+# v4: "yyyy/MM/dd HH:mm:ss ddd"
+format = "{:%Y/%m/%d %H:%M:%S %a}"
+tooltip_format = "{:%Y %m %d %H:%M:%S %a}"
+
+[widget.tray]
+pinned = [ "Mozc" ]
+
+[widget.control-center]
+custom_image = "~/.local/share/arch-jp-setup/images/avatar.png"
+
+[dock]
+enabled = false
+
+[notification]
+position = "bottom_right"
+
+[location]
+address = "Tokyo"
+
+[weather]
+enabled = true
+
+[idle]
+behavior_order = [ "cmatrix", "screen-off" ]
+pre_action_fade_seconds = 2.0
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = false
+    timeout = 900.0
+
+    # 全画面 cmatrix (操作で resume_command により終了)。画面は消さないので DPMS 由来の HDMI 再接続ループは起きない
+    [idle.behavior.cmatrix]
+    action = "command"
+    enabled = true
+    timeout = 900.0
+    command = "alacritty --class screensaver --command cmatrix -s -b"
+    resume_command = "pkill -x cmatrix"

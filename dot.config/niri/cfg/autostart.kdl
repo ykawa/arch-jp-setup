@@ -1,0 +1,10 @@
+// ────────────── Startup Applications ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Miscellaneous#spawn-sh-at-startup
+
+// Noctalia v5 desktop shell (native C++; replaces the Quickshell-based v4)
+spawn-at-startup "noctalia"
+
+// Clipboard: persist clipboard contents across app closures
+spawn-at-startup "wl-clip-persist" "--clipboard" "regular"
+// Clipboard history daemon
+spawn-sh-at-startup "wl-paste --watch cliphist store"

@@ -1,0 +1,8 @@
+# テキストは LF で統一（チェックアウト時も LF）
+* text=auto eol=lf
+
+# バイナリ（改行変換・diff・マージの対象外）
+*.db  binary
+*.jpg binary
+*.png binary
+*.pdf binary

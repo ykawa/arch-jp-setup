@@ -1,0 +1,237 @@
+# Keep files
+!.yarn/cache
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+!/log/.keep
+!/storage/.keep
+!/tmp/.keep
+
+# OS generated files
+$RECYCLE.BIN/
+.DS_*
+.AppleDB
+.AppleDesktop
+.AppleDouble
+.DocumentRevisions-V100
+.LSOverride
+.Spotlight-V100
+.TemporaryItems
+.Trash-*
+.Trashes
+.VolumeIcon.icns
+._*
+.apdisk
+.com.apple.timemachine.donotpresent
+.fseventsd
+.directory
+.fuse_hidden*
+.nfs*
+[Dd]esktop.ini
+Icon
+Network Trash Folder
+Temporary Items
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Backup and temporary files
+**/*.back.*
+**/*.backup.*
+*.old
+*.orig
+*~
+temp.*
+temp/
+temp_*.*
+#tmp.*
+#tmp/
+#/tmp/
+
+# Log files
+*.log
+*.stackdump
+*.pid
+*.pid.lock
+logs
+/log/*
+/logs
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Cache and build directories
+.cache/
+.grunt
+.next
+.nuxt
+.nyc_output
+.parcel-cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.serverless/
+.svelte-kit
+.vuepress/dist
+.webpack/
+build/
+cmake-build-*/
+coverage/
+dist/
+lib-cov
+out/
+pids
+/target
+web_modules/
+
+# Package manager files
+.yarn/*
+.yarn-integrity
+.npm
+.pnpm-debug.log*
+.pnp.*
+node_modules/
+bower_components
+bower.json
+jspm_packages/
+/.bundle/
+/vendor/assets/bower_components
+/vendor/bundle
+
+# IDE and editor files
+.idea/
+.idea_modules/
+.vscode-test
+*.code-workspace
+*.sublime*
+*.iml
+*.ipr
+*.iws
+atlassian-ide-plugin.xml
+modules.xml
+
+# Language specific files
+.byebug_history
+.repl_history
+.node_repl_history
+.rspec
+.rvmrc
+.powenv
+.phpstorm.meta.php
+_Deparsed_XSubs.pm
+_ide_helper_models.php
+.rbc
+.tern-port
+.eslintcache
+.stylelintcache
+.tsbuildinfo
+.lcov
+
+# Database files
+*.dat*
+*Db.properties
+*Db.script
+/db/*.sqlite3
+/db/*.sqlite3-[0-9]*
+/db/*.sqlite3-journal
+/prodDb.*
+
+# Rails/Ruby specific
+/.config
+/.yardoc/
+/InstalledFiles
+/_yardoc/
+/doc/
+/lib/bundler/man/
+/pkg/
+/rdoc/
+/spec/examples.txt
+/spec/reports/
+/spec/tmp
+/test/reports
+/test/tmp/
+/test/version_tmp/
+test/
+capybara-*.html
+pickle-email-*.html
+rerun.txt
+config/initializers/secret_token.rb
+config/master.key
+
+# Web application files
+/public/assets
+/public/packs
+/public/packs-test
+/public/system
+/public/uploads
+/storage/*
+/plugin.xml
+/plugins
+/web-app/WEB-INF/classes
+/web-app/plugins
+docs/_book
+
+# Archive files
+*.cab
+*.gem
+*.msi
+*.msix
+*.msm
+*.msp
+*.tgz
+/*.war
+/*.zip
+
+# Development tools
+.dockerignore
+.dynamodb/
+.env
+.fusebox/
+.lock-wscript
+.seed
+docker-compose.override.yml
+fabric.properties
+crashlytics-build.properties
+crashlytics.properties
+com_crashlytics_export_strings.xml
+
+# Build tools
+*.bowerrc
+*.bridgesupport
+.classpath
+.factorypath
+.project
+.settings/
+build-iPhoneOS/
+build-iPhoneSimulator/
+
+# Personal/Custom patterns
+# >>> local patterns
+# この間はセットアップ時に入力した PC ごとのパターンで置き換わる（~/.config/arch-jp-setup/git-ignore-local）
+# <<< local patterns
+BACKUP/
+*.lnk
+psd
+sketch
+thumb
+
+# devcontainer
+.devcontainer/
+
+# Claude Code specific
+CLAUDE.md
+.claude
+
+# gemini cli specific
+GEMINI.md
+
+# cursor specific
+.cursorrules
+
+# codex specific
+AGENTS.md
+
+# Zed editor
+.zed/
+

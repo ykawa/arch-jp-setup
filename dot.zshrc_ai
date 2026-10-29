@@ -1,0 +1,127 @@
+# AI agent aliases and tmux dev layouts
+# Ported from Omarchy (basecamp/omarchy default/bash/aliases, default/bash/fns/tmux)
+# Note: `c` is kept for colon.pl, so OpenCode has no alias here.
+
+# =============================================================================
+# Agents (auto-approving modes, same as Omarchy)
+# =============================================================================
+
+alias a='cx'
+alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode auto'
+alias cy='codex --approve-for-me'
+alias t='tmux attach || tmux new -s Work'
+alias ix='tdl cx'
+alias iy='tdl cy'
+alias ixy='tdl cx cy'
+
+# =============================================================================
+# Tmux dev layouts
+# =============================================================================
+
+# Create a Tmux Dev Layout with editor, ai, and terminal
+# Usage: tdl <cx|cy|other_ai> [<second_ai>]
+tdl() {
+  [[ -z $1 ]] && { echo "Usage: tdl <cx|cy|other_ai> [<second_ai>]"; return 1; }
+  [[ -z $TMUX ]] && { echo "You must start tmux to use tdl."; return 1; }
+
+  local current_dir="${PWD}"
+  local editor_pane ai_pane ai2_pane
+  local ai="$1"
+  local ai2="$2"
+
+  editor_pane="$TMUX_PANE"
+  tmux rename-window -t "$editor_pane" "$(basename "$current_dir")"
+
+  # Top 85% editor, bottom 15% terminal
+  tmux split-window -v -p 15 -t "$editor_pane" -c "$current_dir"
+
+  # AI on the right 30% of the editor row
+  ai_pane=$(tmux split-window -h -p 30 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
+
+  if [[ -n $ai2 ]]; then
+    ai2_pane=$(tmux split-window -v -t "$ai_pane" -c "$current_dir" -P -F '#{pane_id}')
+    tmux send-keys -t "$ai2_pane" "$ai2" C-m
+  fi
+
+  tmux send-keys -t "$ai_pane" "$ai" C-m
+  tmux send-keys -t "$editor_pane" "${EDITOR:-vim} ." C-m
+  tmux select-pane -t "$editor_pane"
+}
+
+# Create a Tmux Dev Square with editor, git diff watch, terminal, and ai
+# Usage: tds [<ai>]  (default: cx)
+tds() {
+  [[ -z $TMUX ]] && { echo "You must start tmux to use tds."; return 1; }
+
+  local current_dir="${PWD}"
+  local ai="${1:-cx}"
+  local editor_pane diff_pane terminal_pane ai_pane
+
+  editor_pane="$TMUX_PANE"
+  tmux rename-window -t "$editor_pane" "$(basename "$current_dir")"
+
+  terminal_pane=$(tmux split-window -v -p 50 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
+  diff_pane=$(tmux split-window -h -p 50 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
+  ai_pane=$(tmux split-window -h -p 50 -t "$terminal_pane" -c "$current_dir" -P -F '#{pane_id}')
+
+  tmux send-keys -t "$editor_pane" "${EDITOR:-vim} ." C-m
+  tmux send-keys -t "$diff_pane" "watch -c -n 2 git -c color.ui=always diff --stat" C-m
+  tmux send-keys -t "$ai_pane" "$ai" C-m
+  tmux select-pane -t "$editor_pane"
+}
+
+# Create a tdl window for every subdirectory in the current directory
+# Usage: tdlm <cx|cy|other_ai> [<second_ai>]
+tdlm() {
+  [[ -z $1 ]] && { echo "Usage: tdlm <cx|cy|other_ai> [<second_ai>]"; return 1; }
+  [[ -z $TMUX ]] && { echo "You must start tmux to use tdlm."; return 1; }
+
+  local ai="$1"
+  local ai2="$2"
+  local base_dir="$PWD"
+  local first=true
+  local dir dirpath pane_id
+
+  # tmux disallows dots and colons in session names
+  tmux rename-session "$(basename "$base_dir" | tr '.:' '--')"
+
+  for dir in "$base_dir"/*(/N); do
+    dirpath="${dir%/}"
+
+    if $first; then
+      tmux send-keys -t "$TMUX_PANE" "cd '$dirpath' && tdl $ai $ai2" C-m
+      first=false
+    else
+      pane_id=$(tmux new-window -c "$dirpath" -P -F '#{pane_id}')
+      tmux send-keys -t "$pane_id" "tdl $ai $ai2" C-m
+    fi
+  done
+}
+
+# Create a swarm of tiled panes all running the same command
+# Usage: tsl <pane_count> <command>
+tsl() {
+  [[ -z $1 || -z $2 ]] && { echo "Usage: tsl <pane_count> <command>"; return 1; }
+  [[ -z $TMUX ]] && { echo "You must start tmux to use tsl."; return 1; }
+
+  local count="$1"
+  local cmd="$2"
+  local current_dir="${PWD}"
+  local -a panes
+  local new_pane pane
+
+  tmux rename-window -t "$TMUX_PANE" "$(basename "$current_dir")"
+  panes+=("$TMUX_PANE")
+
+  while (( ${#panes[@]} < count )); do
+    new_pane=$(tmux split-window -h -t "${panes[-1]}" -c "$current_dir" -P -F '#{pane_id}')
+    panes+=("$new_pane")
+    tmux select-layout -t "${panes[1]}" tiled
+  done
+
+  for pane in "${panes[@]}"; do
+    tmux send-keys -t "$pane" "$cmd" C-m
+  done
+
+  tmux select-pane -t "${panes[1]}"
+}

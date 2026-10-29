@@ -1,0 +1,11 @@
+#!/bin/bash
+# コミット前に PC 固有の情報（ユーザー名・絶対パスなど）が入っていないか検査する
+# 有効化: git config core.hooksPath .githooks（scripts/tools/writeback.sh が設定する）
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+mapfile -d '' files < <(git diff --cached --name-only --diff-filter=ACMR -z)
+[ ${#files[@]} -gt 0 ] || exit 0
+
+bash "$REPO_ROOT/scripts/tools/check-private.sh" --staged "${files[@]}"

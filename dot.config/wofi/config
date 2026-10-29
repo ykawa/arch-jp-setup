@@ -1,0 +1,12 @@
+width=640
+height=440
+prompt=
+location=center
+allow_images=true
+image_size=28
+hide_scroll=true
+no_actions=true
+line_height=36
+columns=1
+content_halign=start
+insensitive=true

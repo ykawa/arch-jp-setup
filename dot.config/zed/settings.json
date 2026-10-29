@@ -1,0 +1,122 @@
+{
+  "file_finder": {
+    "include_ignored": "all",
+  },
+  "search": {
+    "include_ignored": false,
+  },
+  "context_servers": {},
+  "title_bar": {
+    "show_user_menu": true,
+    "show_menus": true,
+  },
+  "which_key": {
+    "enabled": true,
+  },
+  "base_keymap": "VSCode",
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    },
+    "cursor": {
+      "type": "registry"
+    },
+    "codex-acp": {
+      "default_config_options": {
+        "model": "gpt-5.5",
+        "mode": "agent-full-access",
+      },
+      "type": "registry",
+    },
+  },
+  "edit_predictions": {
+    "provider": "zed",
+    "allow_data_collection": "no",
+  },
+  "cli_default_open_behavior": "new_window",
+  "project_panel": {
+    "dock": "left",
+    "hide_gitignore": false,
+    "auto_reveal_entries": true,
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "agent": {
+    "tool_permissions": {
+      "default": "allow",
+      "tools": {},
+    },
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "auto_update": false,
+  "theme": "One Dark",
+  "buffer_font_family": "源ノ角ゴシック Code JP",
+  "buffer_font_size": 16,
+  "buffer_font_features": {
+    "liga": true,
+  },
+  "buffer_line_height": "comfortable",
+  "ui_font_family": "源ノ角ゴシック Code JP",
+  "ui_font_size": 16,
+  "tab_size": 2,
+  "soft_wrap": "none",
+  "show_whitespaces": "boundary",
+  "format_on_save": "on",
+  "autosave": "on_window_change",
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "vim_mode": false,
+  "relative_line_numbers": "disabled",
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": false,
+      "enabled": true,
+    },
+  },
+  "terminal": {
+    "font_family": "源ノ角ゴシック Code JP",
+    "font_size": 14,
+    "line_height": { "custom": 1.0 },
+  },
+  "lsp": {
+    "esbonio": {
+      "binary": {
+        "path": "~/.local/share/pipx/venvs/esbonio/bin/esbonio",
+        "arguments": ["server"],
+      },
+    },
+  },
+  "languages": {
+    "Markdown": {
+      "format_on_save": "off",
+    },
+  },
+  "file_scan_inclusions": [],
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/.sl",
+    "**/.repo",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    "**/vendor/bundle",
+    "**/tmp",
+  ],
+}

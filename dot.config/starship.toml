@@ -1,0 +1,86 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Tokyo Night theme
+# bg_dark: #16161e  bg: #1a1b26  bg_hl: #292e42
+# blue: #7aa2f7  magenta: #bb9af7  yellow: #e0af68  green: #9ece6a  comment: #565f89
+
+format = """
+[░▒▓](#7aa2f7)\
+[ 🐧 ](bg:#7aa2f7 fg:#1a1b26)\
+$hostname\
+[](bg:#292e42 fg:#7aa2f7)\
+$directory\
+[](fg:#292e42 bg:#1a1b26)\
+$git_branch\
+$git_status\
+[](fg:#1a1b26 bg:#16161e)\
+$rust\
+$haskell\
+[ ](fg:#16161e)\
+\n$character"""
+
+[character]
+success_symbol = '\$(fg:#9ece6a)'
+error_symbol = '\$(fg:#f7768e)'
+
+[hostname]
+ssh_only = true
+disabled = false
+
+[directory]
+style = "fg:#c0caf5 bg:#292e42"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:#1a1b26"
+format = '[[ $symbol $branch ](fg:#e0af68 bg:#1a1b26)]($style)'
+
+[git_status]
+style = "bg:#1a1b26"
+format = '[[($all_status$ahead_behind )](fg:#e0af68 bg:#1a1b26)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#16161e"
+format = '[[ $symbol ($version) ](fg:#ff9e64 bg:#16161e)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:#16161e"
+format = '[[  $time ](fg:#565f89 bg:#16161e)]($style)'
+
+[line_break]
+disabled = false
+
+[jobs]
+symbol = "+"
+style = "bold blue"
+number_threshold = 1
+symbol_threshold = 1
+format = "[$symbol$number]($style) "
+
+[status]
+style = "bold red"
+symbol = "✖"
+success_symbol = "✓"
+not_executable_symbol = "🚫"
+not_found_symbol = "🔍"
+sigint_symbol = "🧱"
+signal_symbol = "⚡"
+format = '[\[$symbol $common_meaning$signal_name$maybe_int\]]($style) '
+map_symbol = true
+disabled = false
+
+[fill]
+symbol = " "
+style = "black"

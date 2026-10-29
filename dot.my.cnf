@@ -1,0 +1,7 @@
+# grc をインストールしてください
+
+[mysql]
+prompt='mysql [\\U \\d]>\\ '
+pager=grcat ~/.grcat 2>/dev/null | less -RSFXin
+
+[mysqldump]

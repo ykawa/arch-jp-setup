@@ -1,0 +1,8 @@
+<menu>
+  <item label="Lock" action="lock"/>
+  <item label="Logout" action="logout"/>
+  <item label="Suspend" action="suspend"/>
+  <item label="Hibernate" action="hibernate"/>
+  <item label="Reboot" action="reboot"/>
+  <item label="Shutdown" action="shutdown"/>
+</menu>

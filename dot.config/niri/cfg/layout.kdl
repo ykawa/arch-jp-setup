@@ -1,0 +1,49 @@
+// ────────────── Layout Configuration ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
+
+layout {
+    gaps 8
+
+    center-focused-column "never"
+
+    // Required for Noctalia to render wallpaper
+    background-color "transparent"
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.44444
+        proportion 0.55556
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.44444; }
+
+    focus-ring {
+        width 6
+        // active-color "#ff79c6"
+        // active-color "#f7768e"
+        // active-color "#ff9ac1"
+        // active-color "#ff2d95"
+        active-color "#ff79c6"
+        inactive-color "#2a2f45"
+    }
+
+    border {
+        off
+
+        width 4
+        active-color "#ffc87f"
+        inactive-color "#505050"
+        urgent-color "#9b0000"
+    }
+
+    shadow {
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#0007"
+    }
+
+    struts {
+    }
+}

@@ -1,0 +1,121 @@
+// ────────────── Window Rules ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+
+// Noctalia wallpaper layer: place behind all other layers
+layer-rule {
+    match namespace="^noctalia-wallpaper*"
+    place-within-backdrop true
+}
+
+// Noctalia v5 settings window: open floating
+window-rule {
+    match app-id="dev.noctalia.Noctalia"
+    open-floating true
+    default-column-width { fixed 1080; }
+    default-window-height { fixed 920; }
+}
+
+// Rounded corners for all windows
+window-rule {
+    geometry-corner-radius 8
+    clip-to-geometry true
+}
+
+// Slightly dim unfocused windows to make the focused one stand out
+// (adjust opacity toward 1.0 for less dimming; prefix with /- to disable)
+window-rule {
+    match is-focused=false
+    opacity 0.96
+}
+
+// Transparent terminal windows: disable focus-ring background fill
+// (prevents the focus ring color from showing through the transparent background)
+// open-maximized false: prevent terminals from opening maximized
+window-rule {
+    match app-id=r#"^(Alacritty(-autostart)?|org\.wezfurlong\.wezterm|Hyper)$"#
+    draw-border-with-background false
+    open-maximized false
+    default-column-width { proportion 0.55556; }
+}
+
+// Firefox: open Picture-in-Picture as floating
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+// KeePassXC / GNOME Secrets: block from screen capture
+window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+    match app-id=r#"^org\.gnome\.World\.Secrets$"#
+    block-out-from "screen-capture"
+}
+
+// MComix: floating manga reader, bottom-left position
+window-rule {
+    match app-id=r#"MComix"#
+    open-floating true
+    default-column-width { fixed 1600; }
+    default-window-height { fixed 1200; }
+    default-floating-position x=280 y=80 relative-to="bottom-left"
+}
+
+// JetBrains IntelliJ IDEA: maximize on open
+window-rule {
+    match app-id=r#"jetbrains-idea"#
+    open-maximized true
+}
+
+window-rule {
+    match app-id=r#"jetbrains-idea"# title=r#"^Merge Revisons for "#
+    default-column-width { proportion 1.00000; }
+}
+
+// mpv: floating, bottom-left position
+window-rule {
+    match app-id=r#"mpv"#
+    // open-floating true
+    // default-floating-position x=80 y=80 relative-to="bottom-left"
+    default-column-width {}
+}
+
+// virt-manager: QEMU/KVM windows take natural width
+window-rule {
+    match app-id=r#"virt-manager"# title=r#"^QEMU/KVM .*$"#
+    default-column-width {}
+}
+
+// galculator: floating with natural size
+window-rule {
+    match app-id="galculator"
+    open-floating true
+    default-column-width {}
+}
+
+// Slack: open at 50% width
+window-rule {
+    match app-id=r#"^slack$"#
+    default-column-width { proportion 0.66667; }
+}
+
+// Title: "ドラゴンクエストＸ　オンライン・・・
+window-rule {
+    match app-id=r#"^steam_"# title=r#"^ドラゴンクエストＸ"#
+    open-floating true
+}
+
+// Screensaver (Noctalia idle → alacritty --class screensaver で cmatrix)
+window-rule {
+    match app-id="^screensaver$"
+    open-fullscreen true
+    geometry-corner-radius 0
+}
+
+// Show Me The Key: floating key display at the bottom center
+window-rule {
+    match title="^Floating Window - Show Me The Key$"
+    open-floating true
+    open-focused false
+    default-floating-position x=0 y=40 relative-to="bottom"
+    geometry-corner-radius 0
+}

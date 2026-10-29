@@ -1,0 +1,37 @@
+// ────────────── Input Configuration ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Input
+
+input {
+    keyboard {
+        xkb {
+            layout "jp"
+            options "ctrl:nocaps"
+        }
+
+        numlock
+        repeat-delay 180
+        repeat-rate 50
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+        accel-speed 0.2
+        accel-profile "adaptive"
+        scroll-method "two-finger"
+    }
+
+    mouse {
+    }
+
+    trackpoint {
+    }
+    // Move mouse cursor to newly focused window
+    //warp-mouse-to-focus
+
+    // Enable workspace back & forth switching
+    workspace-auto-back-and-forth
+
+    // Focus windows and outputs automatically when moving the mouse into them
+    //focus-follows-mouse
+}

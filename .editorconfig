@@ -1,0 +1,15 @@
+root = true
+
+# 末尾改行の付与と行末空白の除去はエディタに任せる
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# バイナリは触らない
+[*.{db,jpg,png,pdf}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset

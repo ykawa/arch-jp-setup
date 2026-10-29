@@ -1,0 +1,34 @@
+autodetach on
+altscreen off
+defbce on
+defutf8 on
+defencoding utf8
+encoding utf8 utf8
+cjkwidth off
+deflogin off
+multiuser on
+
+startup_message off
+vbell off
+
+defscrollback 100000
+termcapinfo xterm* ti@:te@
+
+hardstatus alwayslastline "%{= wg}%{.bw}%-w%{.rw}%n %t%{-}%+w %=%{..G} %{=b kw} %H %{..Y} %Y %m/%d %C%a "
+
+shell $SHELL
+
+# Resize window
+bind  r eval 'command -c resize' 'echo "Resize window"'
+bind ^r eval 'command -c resize' 'echo "Resize window"'
+bind -c resize  h eval 'command -c resize' 'resize -h -1'
+bind -c resize ^h eval 'command -c resize' 'resize -h -1'
+bind -c resize  l eval 'command -c resize' 'resize -h +1'
+bind -c resize ^l eval 'command -c resize' 'resize -h +1'
+bind -c resize  j eval 'command -c resize' 'resize -v +1'
+bind -c resize ^j eval 'command -c resize' 'resize -v +1'
+bind -c resize  k eval 'command -c resize' 'resize -v -1'
+bind -c resize ^k eval 'command -c resize' 'resize -v -1'
+
+bindkey -k k5 prev
+bindkey -k k6 next

@@ -1,0 +1,181 @@
+# ~/.alacritty.toml
+
+[general]
+live_config_reload = true
+import = [
+  "~/.config/alacritty/themes/tokyo-night.toml"
+]
+#   "~/.config/alacritty/themes/noctalia.toml",
+
+[terminal]
+shell = { program = "zellij", args = [] }
+
+# 端末タイプ
+# [env]
+# TERM = "xterm-256color"
+
+[window]
+decorations = "None"
+opacity = 0.8
+padding = { x = 0, y = 0 }
+dimensions = { columns = 0, lines = 0 }
+dynamic_title = true
+# startup_mode = "Windowed" | "Maximized" | "Fullscreen" | "SimpleFullscreen"
+startup_mode = "Maximized"
+# decorations_theme_variant = "Dark" | "Light" | "None"
+decorations_theme_variant = "None"
+
+[scrolling]
+history = 0
+
+[font]
+size = 11.75
+
+[font.normal]
+family = "Source Han Code JP R"
+
+[font.bold]
+family = "Source Han Code JP R"
+
+[font.italic]
+family = "Source Han Code JP R"
+
+[font.offset]
+x = 0
+y = 0
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 600
+blink_timeout = 0
+
+[cursor.vi_mode_style]
+shape = "Block"
+
+[colors]
+cursor = { text = "#003784", cursor = "#00a0e4" }
+
+[colors.selection]
+# text = "#1a1b26"
+# background = "#a9b1d6"
+text = "#000000"
+background = "#ffffff"
+
+[selection]
+# 単語選択の区切り
+semantic_escape_chars = " '\"{}[](),"
+# コピペ
+save_to_clipboard = true
+
+[mouse]
+bindings = [
+  { mouse = "Middle",                 action = "Paste" },
+  { mouse = "Middle", mods = "Shift", action = "Paste" }
+]
+
+# ===== キーバインド =====
+[[keyboard.bindings]]
+key = "Delete"
+mods = "Control"
+chars = "\u001bd"         # Alt+d
+
+[[keyboard.bindings]]
+key = "Backspace"
+mods = "Control"
+chars = "\u0017"          # Ctrl+w
+
+[[keyboard.bindings]]
+key = "Left"
+mods = "Control"
+chars = "\u001bb"         # Alt+b
+
+[[keyboard.bindings]]
+key = "Right"
+mods = "Control"
+chars = "\u001bf"         # Alt+f
+
+[[keyboard.bindings]]
+key = "Up"
+mods = "Shift"
+action = "ScrollLineUp"
+
+[[keyboard.bindings]]
+key = "Down"
+mods = "Shift"
+action = "ScrollLineDown"
+
+# Ctrl+, で ~/.alacritty.toml を Cursor で開く（必要に応じてエディタ名/パスを変更）
+[[keyboard.bindings]]
+key = "Comma"
+mods = "Control"
+command = { program = "sh", args = ["-lc", "cursor ~/.config/alacritty/alacritty.toml"] }
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
+
+## # Alt+1 → zellij タブ1
+## [[keyboard.bindings]]
+## key = "Key1"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "1"] }
+## 
+## # Alt+2 → タブ2
+## [[keyboard.bindings]]
+## key = "Key2"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "2"] }
+## 
+## # Alt+3 → タブ3
+## [[keyboard.bindings]]
+## key = "Key3"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "3"] }
+## 
+## # Alt+4 → タブ4
+## [[keyboard.bindings]]
+## key = "Key4"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "4"] }
+## 
+## # Alt+5 → タブ5
+## [[keyboard.bindings]]
+## key = "Key5"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "5"] }
+## 
+## # Alt+6 → タブ6
+## [[keyboard.bindings]]
+## key = "Key6"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "6"] }
+## 
+## # Alt+7 → タブ7
+## [[keyboard.bindings]]
+## key = "Key7"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "7"] }
+## 
+## # Alt+8 → タブ8
+## [[keyboard.bindings]]
+## key = "Key8"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "8"] }
+## 
+## # Alt+9 → タブ9
+## [[keyboard.bindings]]
+## key = "Key9"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "9"] }
+## 
+## # Alt+0 → タブ10
+## [[keyboard.bindings]]
+## key = "Key0"
+## mods = "Alt"
+## command = { program = "zellij", args = ["action", "go-to-tab", "10"] }

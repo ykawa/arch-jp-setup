@@ -1,0 +1,67 @@
+/* Tokyo Night style */
+* {
+    font-family: "Noto Sans JP", "Inter", sans-serif;
+    font-size: 15px;
+    outline: none;
+    border: none;
+}
+
+window {
+    margin: 0;
+    border: 1px solid rgba(122, 162, 247, 0.3);
+    border-radius: 14px;
+    background-color: rgba(26, 27, 38, 0.95);
+}
+
+#input {
+    padding: 14px 18px;
+    margin: 0;
+    border-radius: 14px 14px 0 0;
+    border-bottom: 1px solid rgba(122, 162, 247, 0.15);
+    background-color: transparent;
+    color: #c0caf5;
+    caret-color: #7aa2f7;
+    font-size: 16px;
+}
+
+#outer-box {
+    padding: 0;
+    background-color: transparent;
+    border-radius: 14px;
+}
+
+#inner-box {
+    margin: 0;
+    padding: 4px 0;
+    background-color: transparent;
+}
+
+#scroll {
+    background-color: transparent;
+}
+
+#entry {
+    padding: 4px 14px;
+    margin: 2px 6px;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+#entry:selected {
+    background-color: rgba(122, 162, 247, 0.25);
+}
+
+#text {
+    padding: 0 8px;
+    color: #a9b1d6;
+}
+
+#text:selected {
+    color: #c0caf5;
+    background: transparent;
+}
+
+#img {
+    padding-right: 4px;
+    border-radius: 4px;
+}

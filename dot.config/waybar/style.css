@@ -1,0 +1,72 @@
+/* Modern, minimal Waybar theme (GTK CSS) */
+@define-color bg rgba(20,22,26,0.60);
+@define-color fg #e6e9ef;
+@define-color muted #a6adb3;
+@define-color accent #89b4fa; /* accent color */
+@define-color pill rgba(255,255,255,0.07);
+@define-color pill_hover rgba(255,255,255,0.12);
+
+* { font-family: "Symbols Nerd Font", "Noto Sans JP", "Noto Sans", sans-serif; font-size: 13px; }
+
+window#waybar {
+  background-color: @bg;
+  color: @fg;
+  margin: 6px 8px 0 8px; /* floating look */
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* General module pills */
+#clock, #battery, #cpu, #memory, #temperature, #backlight, #network,
+#pulseaudio, #wireplumber, #custom-media, #tray, #mode, #idle_inhibitor,
+#scratchpad, #power-profiles-daemon, #mpd, #keyboard-state, #custom-power {
+  padding: 0 10px;
+  margin: 6px 4px;
+  background-color: @pill;
+  border-radius: 10px;
+}
+
+/* Hover effect */
+#clock:hover, #battery:hover, #cpu:hover, #memory:hover, #temperature:hover, #backlight:hover,
+#network:hover, #pulseaudio:hover, #wireplumber:hover, #custom-media:hover, #tray:hover,
+#mode:hover, #idle_inhibitor:hover, #scratchpad:hover, #power-profiles-daemon:hover,
+#mpd:hover, #keyboard-state:hover, #custom-power:hover {
+  background-color: @pill_hover;
+}
+
+/* Workspaces as subtle pills */
+#workspaces { margin: 0 6px; }
+#workspaces button {
+  padding: 4px 8px;
+  margin: 6px 4px;
+  border-radius: 10px;
+  background: transparent;
+  color: @muted;
+  border: 1px solid transparent;
+}
+#workspaces button:hover { border-color: @pill_hover; }
+#workspaces button.focused {
+  color: @fg;
+  background: @pill;
+  box-shadow: inset 0 -2px @accent;
+}
+#workspaces button.urgent { background-color: #eb6f92; color: #fff; }
+
+/* Accents */
+#pulseaudio.muted { color: #8c8fa1; }
+#network.disconnected { color: #e78284; }
+#battery.charging, #battery.plugged { color: #a6e3a1; }
+#temperature.critical { color: #e78284; }
+
+/* Power button highlight */
+#custom-power { color: @accent; font-weight: 600; }
+
+/* Tray tweaks */
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }
+/* Active workspace style for Hyprland module */
+#workspaces button.active {
+  color: @fg;
+  background: @pill;
+  box-shadow: inset 0 -2px @accent;
+}

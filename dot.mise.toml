@@ -1,0 +1,16 @@
+[settings]
+# ---- 自動インストール系 ----
+not_found_auto_install   = false
+auto_install             = false
+exec_auto_install        = false
+task_run_auto_install    = false
+
+# ---- バージョンファイル & 警告系 ----
+idiomatic_version_file_enable_tools = ["ruby", "node"]
+status.missing_tools     = "never"
+disable_hints            = ["all"]
+
+# ---- ネットワーク問い合わせ系 ----
+use_versions_host        = false
+http_timeout             = "3s"
+fetch_remote_versions_timeout = "3s"

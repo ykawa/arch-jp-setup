@@ -1,0 +1,8 @@
+# Mozc runtime-generated files (re-created automatically on startup)
+.session.ipc
+.encrypt_key.db
+.server.lock
+.history.db
+boundary.db
+cform.db
+segment.db

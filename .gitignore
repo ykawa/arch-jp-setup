@@ -1,0 +1,5 @@
+# INSTALL_DIR（~/.local/share/arch-jp-setup）にだけ置く PC ごとのファイル
+/images/
+
+# 上流設定のスナップショット（手元での比較用、リポジトリでは管理しない）
+/references/

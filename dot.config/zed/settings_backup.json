@@ -1,0 +1,33 @@
+{
+  "auto_update": false,
+  "theme": "Dracula",
+  "buffer_font_family": "Source Han Code JP R",
+  "buffer_font_size": 16,
+  "buffer_font_features": {
+    "liga": true
+  },
+  "buffer_line_height": {"custom": 1.4},
+  "ui_font_family": "Source Han Code JP R",
+  "ui_font_size": 16,
+  "tab_size": 2,
+  "soft_wrap": "none",
+  "show_whitespaces": "boundary",
+  "format_on_save": "on",
+  "autosave": {"after_delay": {"milliseconds": 1000}},
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "vim_mode": false,
+  "relative_line_numbers": false,
+  "git": {
+    "inline_blame": {
+      "enabled": true
+    }
+  },
+  "terminal": {
+    "font_family": "Source Han Code JP R",
+    "font_size": 14,
+    "line_height": {"custom": 1.0}
+  }
+}
