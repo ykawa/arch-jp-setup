@@ -12,25 +12,12 @@ echo "  Theme Setup for niri"
 echo "================================"
 echo ""
 
-# ── パッケージインストール ─────────────────────────────────
-
-echo "[1/3] Installing theme packages..."
-paru -S --needed --noconfirm \
-    tokyonight-gtk-theme-git \
-    papirus-icon-theme \
-    bibata-cursor-theme \
-    capitaine-cursors \
-    gtk-theme-numix-sx \
-    mint-l-icons \
-    mint-l-theme \
-    kvantum \
-    || true
-
-echo ""
+# テーマのパッケージは scripts/common/0175-themes-install.sh で選んで入れる。
+# 入っていないテーマを指定しても GTK は既定（Adwaita）で表示する。
 
 # ── 設定ファイルのリンク ───────────────────────────────────
 
-echo "[2/3] Linking config files..."
+echo "[1/2] Linking config files..."
 link_dotconfig "gtk-3.0"    "$REPO_ROOT"
 link_dotconfig "gtk-4.0"    "$REPO_ROOT"
 link_dotconfig "xsettingsd" "$REPO_ROOT"
@@ -39,7 +26,7 @@ echo ""
 
 # ── gsettings（GNOME/GTK アプリ共通） ──────────────────────
 
-echo "[3/3] Applying gsettings..."
+echo "[2/2] Applying gsettings..."
 
 gsettings set org.gnome.desktop.interface gtk-theme           'Numix-SX-FullDark'
 gsettings set org.gnome.desktop.interface icon-theme          'Papirus-Dark'
