@@ -12,10 +12,12 @@ echo ""
 
 # Step 1: パッケージインストール
 echo "Step 1: Installing fcitx5-im and fcitx5-mozc..."
-if pacman -Q fcitx5 fcitx5-mozc &>/dev/null; then
-    echo "fcitx5 and fcitx5-mozc are already installed, skipping package installation"
+paru -S --needed --noconfirm fcitx5-im
+# fcitx5-mozc-ut（0185）が入っていれば provides で満たされるので、公式の fcitx5-mozc は入れない
+if pacman -T fcitx5-mozc &>/dev/null; then
+    echo "fcitx5-mozc (or a provider such as fcitx5-mozc-ut) is already installed"
 else
-    paru -S --needed --noconfirm fcitx5-im fcitx5-mozc
+    paru -S --needed --noconfirm fcitx5-mozc
 fi
 echo ""
 
