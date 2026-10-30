@@ -8,7 +8,7 @@
 
 ## アプリケーション & ランチャー
 - `Mod+T`, `Mod+Return`, `Super+Return` — 主ターミナルを起動（setup.sh で選んだもの。未選択なら Alacritty）
-- `Mod+Alt+Return` — 副ターミナルを起動（ターミナルを2つ以上選んだとき）
+- `Mod+Shift+Return` — 副ターミナルを起動（ターミナルを2つ以上選んだとき）
 - `Mod+D`, `Super+Space`, `Mod+Ctrl+Return` — Noctalia ランチャーを開く
 - `Mod+B` — 選んだブラウザを起動（未選択なら何もしない）
 - `Mod+E` — 選んだファイラーを起動（既定は Nautilus）

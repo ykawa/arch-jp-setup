@@ -6,6 +6,7 @@
 # を書くと、そのパッケージを入れたときに <種類> の候補になる。種類は次のとおり。
 #   gtk / icon / cursor … GTK テーマ・アイコン・カーソル（値はテーマ名）
 #   terminal            … ターミナル（値はコマンド名）。2つ以上入れると副ターミナル terminal2 も選ぶ
+#                         （副ターミナルは入れたターミナル全部から選べる。初期値は主ターミナル以外の先頭）
 #   filer / browser     … ファイラー・ブラウザ（値はコマンド名）
 # 種類ごとに、候補が1つならそれ、2つ以上なら TUI で選んだものを既定にして
 # ~/.config/arch-jp-setup/defaults に "<種類> <値>" で保存する。候補がなければ保存しない
@@ -23,7 +24,7 @@ declare -A DEFAULT_KIND_LABELS=(
     [icon]="アイコン"
     [cursor]="カーソル"
     [terminal]="主ターミナル（Mod+Return）"
-    [terminal2]="副ターミナル（Mod+Alt+Return）"
+    [terminal2]="副ターミナル（Mod+Shift+Return）"
     [filer]="ファイラー（Mod+E）"
     [browser]="ブラウザ（Mod+B）"
 )
@@ -78,13 +79,11 @@ select_defaults() {
         for line in "${provided[@]}"; do
             read -r entry_kind value pkg desktop <<< "$line"
             [ "$entry_kind" = "$source_kind" ] || continue
-            # 副ターミナルは主ターミナル以外から選ぶ
-            [ "$kind" = "terminal2" ] && [ "$value" = "${chosen[terminal]}" ] && continue
             candidates+=("$value")
             labels+=("$value（$pkg）")
         done
         # 副ターミナルはターミナルを2つ以上入れるときだけ
-        if [ "$kind" = "terminal2" ] && [ -z "${chosen[terminal]}" ]; then
+        if [ "$kind" = "terminal2" ] && [ ${#candidates[@]} -lt 2 ]; then
             candidates=()
         fi
 
@@ -94,6 +93,12 @@ select_defaults() {
             1) chosen[$kind]="${candidates[0]}" ;;
             *)
                 chosen[$kind]="${candidates[0]}"
+                # 副ターミナルの初期値は主ターミナル以外の先頭
+                if [ "$kind" = "terminal2" ]; then
+                    for value in "${candidates[@]}"; do
+                        [ "$value" != "${chosen[terminal]}" ] && { chosen[$kind]="$value"; break; }
+                    done
+                fi
                 for value in "${candidates[@]}"; do
                     [ "$value" = "$saved" ] && chosen[$kind]="$saved"
                 done

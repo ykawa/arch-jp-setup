@@ -11,7 +11,7 @@ binds {
     Mod+T       hotkey-overlay-title="Open Terminal: 主ターミナル"        { spawn-sh "bash ~/.config/niri/launch.sh terminal"; }
     Mod+Return  hotkey-overlay-title="Open Terminal: 主ターミナル"        { spawn-sh "bash ~/.config/niri/launch.sh terminal"; }
     Super+Return hotkey-overlay-title="Open Terminal: 主ターミナル"       { spawn-sh "bash ~/.config/niri/launch.sh terminal"; }
-    Mod+Alt+Return hotkey-overlay-title="Open Terminal: 副ターミナル"     { spawn-sh "bash ~/.config/niri/launch.sh terminal2"; }
+    Mod+Shift+Return hotkey-overlay-title="Open Terminal: 副ターミナル"   { spawn-sh "bash ~/.config/niri/launch.sh terminal2"; }
     // Launch Claude Code in auto mode (Omarchy Super+Shift+Ctrl+A); $HOME is untrusted, so start in ~/Work
     Mod+Shift+Ctrl+A hotkey-overlay-title="AI Agent: Claude Code"     { spawn-sh "mkdir -p ~/Work && bash ~/.config/niri/launch.sh terminal -d ~/Work -- claude --permission-mode auto"; }
     Mod+Shift+N hotkey-overlay-title="Editor: Neovim"                  { spawn-sh "bash ~/.config/niri/launch.sh terminal -- nvim"; }
