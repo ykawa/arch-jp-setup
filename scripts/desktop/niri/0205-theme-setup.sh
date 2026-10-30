@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 source "$REPO_ROOT/lib/link-config.sh"
+source "$REPO_ROOT/lib/defaults.sh"
 
 echo "================================"
 echo "  Theme Setup for niri"
@@ -20,7 +21,6 @@ echo ""
 echo "[1/2] Linking config files..."
 link_dotconfig "gtk-3.0"    "$REPO_ROOT"
 link_dotconfig "gtk-4.0"    "$REPO_ROOT"
-link_dotconfig "xsettingsd" "$REPO_ROOT"
 
 echo ""
 
@@ -28,9 +28,13 @@ echo ""
 
 echo "[2/2] Applying gsettings..."
 
-gsettings set org.gnome.desktop.interface gtk-theme           'Numix-SX-FullDark'
-gsettings set org.gnome.desktop.interface icon-theme          'Papirus-Dark'
-gsettings set org.gnome.desktop.interface cursor-theme        'Bibata-Modern-Ice'
+# GTK の設定ファイルと同じ値（入っていないテーマは Adwaita）
+GTK_THEME_NAME=$(theme_value gtk)
+ICON_THEME_NAME=$(theme_value icon)
+CURSOR_THEME_NAME=$(theme_value cursor)
+gsettings set org.gnome.desktop.interface gtk-theme           "$GTK_THEME_NAME"
+gsettings set org.gnome.desktop.interface icon-theme          "$ICON_THEME_NAME"
+gsettings set org.gnome.desktop.interface cursor-theme        "$CURSOR_THEME_NAME"
 gsettings set org.gnome.desktop.interface cursor-size         24
 gsettings set org.gnome.desktop.interface font-name           'Meiryo UI 11'
 gsettings set org.gnome.desktop.interface document-font-name  'Meiryo UI 11'
@@ -42,11 +46,9 @@ echo ""
 echo "================================"
 echo "  Theme setup completed!"
 echo ""
-echo "  GTK3  theme : Tokyonight-Dark  (gtk-3.0/settings.ini)"
-echo "  GTK4  theme : Tokyonight-Dark  (gtk-4.0/settings.ini)"
-echo "  Icon  theme : Papirus-Dark"
-echo "  Cursor theme: Bibata-Modern-Classic (GTK3/4)"
-echo "               Bibata-Modern-Ice     (GNOME/Cinnamon apps)"
+echo "  GTK テーマ  : $GTK_THEME_NAME"
+echo "  アイコン    : $ICON_THEME_NAME"
+echo "  カーソル    : $CURSOR_THEME_NAME"
 echo "  Font        : Meiryo UI 11"
 echo "  Mono font   : 源ノ角ゴシック Code JP 12"
 echo ""

@@ -104,7 +104,7 @@ window-rule {
     open-floating true
 }
 
-// Screensaver (Noctalia idle → alacritty --class screensaver で cmatrix)
+// Screensaver (Noctalia idle → 主ターミナルを app-id screensaver で開いて cmatrix)
 window-rule {
     match app-id="^screensaver$"
     open-fullscreen true

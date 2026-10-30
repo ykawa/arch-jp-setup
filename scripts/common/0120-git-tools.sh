@@ -1,11 +1,9 @@
 #!/bin/bash
 # Git 関連ツール
-# @group: Git ツール (gh / tea / delta / difftastic / lazygit / hunk)
+# @group: Git ツール (gh / tea / lazygit / hunk)
 # @item: github-cli GitHub CLI (gh)
 # @item: tea Gitea CLI
 # @item: lazygit Git の TUI
-# @item: git-delta diff 表示（git の pager に設定済み）
-# @item: difftastic 構文を見る diff（git の difftool に設定済み）
 # @item: hunk-bin diff ビューア
 set -e
 

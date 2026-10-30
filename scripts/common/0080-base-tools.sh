@@ -13,6 +13,8 @@ paru -S --needed --noconfirm \
     curl \
     gcc \
     git \
+    git-delta \
+    difftastic \
     make \
     python \
     python-pip \

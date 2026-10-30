@@ -25,6 +25,7 @@ paru -S --needed --noconfirm \
     noctalia \
     upower \
     power-profiles-daemon \
+    cmatrix \
     || true
 
 echo ""

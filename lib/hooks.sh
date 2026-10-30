@@ -13,7 +13,6 @@ HOOKS_DIR="$HOME/.config/arch-jp-setup/hooks.d"
 run_hooks() {
     local repo_root="$1" caller="$2" hook
 
-    [ -d "$HOOKS_DIR" ] || return 0
     for hook in "$HOOKS_DIR"/*.sh; do
         [ -e "$hook" ] || continue
         echo "Running hook: $(basename "$hook")"

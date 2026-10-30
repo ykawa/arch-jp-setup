@@ -130,5 +130,5 @@ pre_action_fade_seconds = 2.0
     action = "command"
     enabled = true
     timeout = 900.0
-    command = "alacritty --class screensaver --command cmatrix -s -b"
+    command = "bash ~/.config/niri/launch.sh terminal --class screensaver -- cmatrix -s -b"
     resume_command = "pkill -x cmatrix"

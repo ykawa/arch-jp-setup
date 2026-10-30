@@ -2,6 +2,10 @@
 # Cinnamon システム設定（ワークスペース、パネル、ショートカット等）
 set -e
 
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+source "$REPO_ROOT/lib/defaults.sh"
+
 echo "================================"
 echo "  Cinnamon System Configuration"
 echo "================================"
@@ -111,8 +115,16 @@ if command -v gsettings >/dev/null 2>&1; then
             # Create directory if it doesn't exist
             mkdir -p "$(dirname "$conf")"
 
+            # パネルに固定するのは Nemo と、setup.sh で選んだ既定のブラウザ・主ターミナル
+            pinned=("nemo.desktop")
+            browser_desktop=$(default_desktop_file "$REPO_ROOT" browser)
+            terminal_desktop=$(default_desktop_file "$REPO_ROOT" terminal)
+            [[ -n "$browser_desktop" ]] && pinned+=("$browser_desktop")
+            [[ -n "$terminal_desktop" ]] && pinned+=("$terminal_desktop")
+            expected_value=$(printf '%s\n' "${pinned[@]}" | jq -R . | jq -sc .)
+
             # Create the proper JSON structure for pinned apps
-            desired_config='{
+            desired_config=$(jq -n --argjson value "$expected_value" '{
     "pinned-apps": {
         "type": "generic",
         "default": [
@@ -120,18 +132,16 @@ if command -v gsettings >/dev/null 2>&1; then
             "firefox.desktop",
             "org.gnome.Terminal.desktop"
         ],
-        "value": [
-            "nemo.desktop",
-            "google-chrome.desktop",
-            "org.wezfurlong.wezterm.desktop"
-        ]
+        "value": $value
     }
-}'
+}')
 
+            # ブラウザもターミナルも選んでいなければ Cinnamon の既定のままにする
+            if [[ -z "$browser_desktop" && -z "$terminal_desktop" ]]; then
+                echo "ブラウザもターミナルも選ばれていないため、パネルは Cinnamon の既定のままにします"
             # Check if config already has the correct structure and values
-            if [[ -f "$conf" ]] && jq -e '.["pinned-apps"].value' "$conf" >/dev/null 2>&1; then
+            elif [[ -f "$conf" ]] && jq -e '.["pinned-apps"].value' "$conf" >/dev/null 2>&1; then
                 current_value=$(jq -c '.["pinned-apps"].value' "$conf" 2>/dev/null)
-                expected_value='["nemo.desktop","google-chrome.desktop","org.wezfurlong.wezterm.desktop"]'
 
                 if [[ "$current_value" == "$expected_value" ]]; then
                     echo "Panel applications already configured correctly"

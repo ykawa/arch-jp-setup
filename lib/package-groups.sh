@@ -11,6 +11,8 @@
 #   # @item: <パッケージ名> [説明] [@off]   （@off を付けると既定で入れない）
 # を並べると、グループを選んだあとに入れるものを個別に選べる。
 # スクリプトは install_selected_items "$0" で選ばれたパッケージだけを入れる。
+#   # @bundle: <パッケージ名> <一緒に入れるパッケージ名>...
+# を書くと、そのパッケージを選んだときに一緒に入れる（例: alacritty と zellij）。
 # 選択は GROUP_SELECTION_FILE に "<グループID>:<パッケージ名> on|off" として保存される。
 
 GROUP_SELECTION_FILE="$HOME/.config/arch-jp-setup/selection"
@@ -183,14 +185,18 @@ is_group_selected() {
     [ "$state" = "on" ]
 }
 
-# 選ばれた @item のパッケージ名を1行ずつ出力する
+# 選ばれた @item のパッケージ名を1行ずつ出力する（@bundle で一緒に入れるものも含む）
 selected_items() {
-    local script="$1" line
+    local script="$1" line pkg
+    local -a bundled
     while IFS= read -r line; do
         if [ "$(item_state "$script" "$line")" = "on" ]; then
-            echo "${line%% *}"
+            pkg="${line%% *}"
+            echo "$pkg"
+            read -ra bundled <<< "$(sed -n "s/^# @bundle:[[:space:]]*$pkg[[:space:]]\{1,\}//p" "$script")"
+            printf '%s\n' "${bundled[@]}"
         fi
-    done < <(group_items "$script")
+    done < <(group_items "$script") | awk 'NF && !seen[$0]++'
 }
 
 # 選ばれた @item のパッケージを入れる（追加の paru オプションは引数で渡す）。

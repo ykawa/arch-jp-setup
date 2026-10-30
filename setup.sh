@@ -78,6 +78,14 @@ main() {
         log_message "  [$group_state] $group_name"
     done < "$GROUP_SELECTION_FILE"
 
+    if ! select_defaults "$SCRIPT_DIR"; then
+        log_message "既定の選択がキャンセルされたため中止します"
+        exit 1
+    fi
+    while read -r default_kind default_name; do
+        log_message "  既定の $default_kind: $default_name"
+    done < "$DEFAULTS_SETTING_FILE"
+
     # PC ごとの設定（INSTALL_DIR のコピーにだけ反映する）
     if [ "$CURRENT_DE" = "niri" ]; then
         select_avatar_source || { log_message "Avatar selection cancelled. Aborting setup."; exit 1; }

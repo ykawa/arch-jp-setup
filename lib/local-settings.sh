@@ -6,7 +6,10 @@
 #                                setup.sh の TUI で選ぶ（再実行時の初期値にもなる）
 #   zed-file-scan-inclusions   … Zed の file_scan_inclusions に入れる glob（カンマ区切り）
 #   git-ignore-local           … グローバル gitignore に足す個人用パターン（1行1パターン）
+#   defaults                   … テーマ・ターミナル・ファイラー・ブラウザの既定（lib/defaults.sh）
 # zed-file-scan-inclusions と git-ignore-local は外部フック（lib/hooks.sh）などが書く。
+
+source "$(dirname "${BASH_SOURCE[0]}")/defaults.sh"
 
 LOCAL_SETTINGS_DIR="$HOME/.config/arch-jp-setup"
 AVATAR_SETTING_FILE="$LOCAL_SETTINGS_DIR/avatar"
@@ -157,9 +160,10 @@ apply_git_ignore_local() {
     mv "$ignore_file.tmp" "$ignore_file"
 }
 
-# 保存した値を INSTALL_DIR のコピーへ反映する（値ファイルがなければ何もしない）
+# 保存した値を INSTALL_DIR のコピーへ反映する（値ファイルがなければ何もしない。テーマは常に確かめる）
 apply_local_settings() {
     local install_dir="$1"
+    apply_theme_settings "$install_dir"
     if [ -f "$ZED_INCLUSIONS_SETTING_FILE" ] && [ -f "$install_dir/dot.config/zed/settings.json" ]; then
         apply_zed_file_scan_inclusions "$install_dir/dot.config/zed/settings.json"
     fi

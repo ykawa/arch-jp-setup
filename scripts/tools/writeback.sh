@@ -18,6 +18,12 @@ source "$SCRIPT_DIR/../../lib/local-settings.sh"
 # PC ごとの値を持つ行（<ファイル> <行の正規表現>）。書き戻し先にある同じ行で置き換える
 LOCAL_LINES=(
     'dot.config/zed/settings.json ^[[:space:]]*"file_scan_inclusions":'
+    'dot.config/gtk-3.0/settings.ini ^gtk-theme-name='
+    'dot.config/gtk-3.0/settings.ini ^gtk-icon-theme-name='
+    'dot.config/gtk-3.0/settings.ini ^gtk-cursor-theme-name='
+    'dot.config/gtk-4.0/settings.ini ^gtk-theme-name='
+    'dot.config/gtk-4.0/settings.ini ^gtk-icon-theme-name='
+    'dot.config/gtk-4.0/settings.ini ^gtk-cursor-theme-name='
 )
 
 # PC ごとの値を持つ範囲（マーカー行の間）。書き戻し先にある同じ範囲で置き換える
