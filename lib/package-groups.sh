@@ -71,7 +71,7 @@ select_groups() {
         # curl | bash 経由では標準入力がパイプなので、端末は /dev/tty から読む
         output=$(gum choose --no-limit \
             --height 30 \
-            --header "インストールするグループを選択（space: 切替 / ctrl+a: 全選択 / enter: 決定）" \
+            --header "インストールするグループを選択（tab または x: 切替 / ctrl+a: 全選択 / enter: 決定）" \
             --selected "$selected_csv" \
             "${labels[@]}" </dev/tty) || return 1
         mapfile -t chosen <<< "$output"
