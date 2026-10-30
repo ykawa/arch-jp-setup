@@ -1,13 +1,7 @@
 #!/bin/bash
 # This script installs zsh and sets it as the default shell
-# @group: zsh (デフォルトシェル化 / プロンプト)
-# @item: starship プロンプト（.bashrc / .zshrc が使う）
-# @item: zsh-theme-powerlevel10k プロンプト（.zshrc では未使用） @off
+# @group: zsh (デフォルトシェル化 / starship)
 set -e
-
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-source "$REPO_ROOT/lib/package-groups.sh"
 
 echo "================================"
 echo "  Zsh Installation Script"
@@ -25,8 +19,8 @@ paru -S --needed --noconfirm \
     zsh-syntax-highlighting \
     zsh-autosuggestions \
     zsh-history-substring-search \
+    starship \
     || true
-install_selected_items "$0"
 
 echo "Zsh installed successfully:"
 zsh --version
