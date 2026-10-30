@@ -38,6 +38,7 @@ XDG_DOCUMENTS_DIR="$HOME/Documents"
 XDG_MUSIC_DIR="$HOME/Music"
 XDG_PICTURES_DIR="$HOME/Pictures"
 XDG_VIDEOS_DIR="$HOME/Videos"
+XDG_PROJECTS_DIR="$HOME/Projects"
 EOF
 
 [ -d "$HOME/画像" ] && mv "$HOME/画像" "$HOME/Pictures" 2>/dev/null || true
@@ -48,6 +49,8 @@ EOF
 [ -d "$HOME/ビデオ" ] && mv "$HOME/ビデオ" "$HOME/Videos" 2>/dev/null || true
 [ -d "$HOME/公開" ] && mv "$HOME/公開" "$HOME/Public" 2>/dev/null || true
 [ -d "$HOME/音楽" ] && mv "$HOME/音楽" "$HOME/Music" 2>/dev/null || true
+# xdg-user-dirs 0.20 以降で追加された PROJECTS
+[ -d "$HOME/プロジェクト" ] && mv "$HOME/プロジェクト" "$HOME/Projects" 2>/dev/null || true
 
 cat > "$HOME/.config/user-dirs.locale" << 'EOF'
 ja_JP
