@@ -3,7 +3,6 @@
 not_found_auto_install   = false
 auto_install             = false
 exec_auto_install        = false
-task_run_auto_install    = false
 
 # ---- バージョンファイル & 警告系 ----
 idiomatic_version_file_enable_tools = ["ruby", "node"]
