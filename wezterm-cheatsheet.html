@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>WezTerm Cheatsheet</title>
+<style>
+  @page { size: A4 landscape; margin: 8mm 9mm 7mm; }
+  :root {
+    --accent: #1f5fbf;
+    --accent-soft: #e8f0fc;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --rule: #d4d4d4;
+    --kbd-bg: #f3f3f3;
+    --kbd-border: #b9b9b9;
+    --prefix: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body {
+    font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.36;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 1.6mm; margin-bottom: 2.4mm;
+  }
+  h1 { font-size: 15pt; margin: 0; letter-spacing: .02em; }
+  h1 span { color: var(--accent); }
+  .legend { font-size: 7pt; color: var(--muted); display: flex; gap: 4mm; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .legend .dot { display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: 50%; vertical-align: -0.3mm; margin-right: 1mm; }
+  .cols { column-count: 4; column-gap: 4mm; column-fill: balance; }
+  section { break-inside: avoid; margin: 0 0 2.6mm; }
+  h2 {
+    font-size: 8.4pt; margin: 0 0 1mm; padding: 0.7mm 1.6mm;
+    background: var(--accent); color: #fff; border-radius: 1mm;
+    letter-spacing: .03em;
+  }
+  h2 small { font-weight: normal; opacity: .85; font-size: 6.8pt; margin-left: 1.2mm; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 0.55mm 0.6mm; vertical-align: top; border-bottom: 0.2mm solid var(--rule); }
+  tr:last-child td { border-bottom: none; }
+  td.k { white-space: nowrap; width: 1%; padding-right: 1.6mm; }
+  tr.custom td.d::after {
+    content: "★"; color: var(--accent); font-size: 6pt; margin-left: 0.8mm; vertical-align: 0.4mm;
+  }
+  kbd {
+    font-family: "Cica", "DejaVu Sans Mono", monospace;
+    font-size: 7.6pt;
+    background: var(--kbd-bg);
+    border: 0.25mm solid var(--kbd-border);
+    border-bottom-width: 0.5mm;
+    border-radius: 0.8mm;
+    padding: 0 0.9mm;
+    display: inline-block;
+    line-height: 1.35;
+  }
+  kbd.p { background: #fbeae8; border-color: #e3a49d; color: var(--prefix); font-weight: bold; }
+  .plus { color: var(--muted); margin: 0 0.3mm; font-size: 6.5pt; }
+  code {
+    font-family: "Cica", "DejaVu Sans Mono", monospace;
+    font-size: 7.6pt;
+  }
+  .note {
+    font-size: 6.8pt; color: var(--muted); margin: 0.8mm 0 0; padding-left: 0.6mm;
+  }
+  .box {
+    background: var(--accent-soft); border-left: 1mm solid var(--accent);
+    padding: 1.2mm 1.6mm; border-radius: 0.8mm; font-size: 7.2pt;
+  }
+  .box p { margin: 0 0 0.6mm; }
+  .box p:last-child { margin: 0; }
+  .cli td { display: block; border: none; padding: 0 0.6mm; }
+  .cli tr { display: block; border-bottom: 0.2mm solid var(--rule); padding: 0.4mm 0; }
+  .cli tr:last-child { border-bottom: none; }
+  .cli td.k { width: auto; }
+  .cli td.k code { color: var(--accent); }
+  .cli td.d { padding-left: 3mm; color: #333; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>WezTerm</span> チートシート <small style="font-size:8pt;color:var(--muted);font-weight:normal">tmux.conf 準拠のキーバインド</small></h1>
+  <div class="legend">
+    <span><kbd class="p">P</kbd> = Prefix（<kbd>Ctrl</kbd>+<kbd>Space</kbd> / <kbd>Ctrl</kbd>+<kbd>b</kbd>）</span>
+    <span><span style="color:var(--accent)">★</span> 独自設定</span>
+    <span>無印 = WezTerm 標準</span>
+  </div>
+</header>
+
+<div class="cols">
+
+<section>
+  <h2>基本の考え方</h2>
+  <div class="box">
+    <p><b>対応</b>：tmux のセッション → <b>ワークスペース</b>、ウィンドウ → <b>タブ</b>、ペイン → ペイン。</p>
+    <p><b>Prefix 系</b>：<kbd class="p">P</kbd> を押して離してから次のキー（<kbd>Esc</kbd> で取消）。</p>
+    <p><b>直接系</b>：<kbd>Alt</kbd> / <kbd>Ctrl</kbd>+<kbd>Alt</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd> の組み合わせは Prefix 不要。</p>
+    <p>キー一覧は <kbd class="p">P</kbd> <kbd>?</kbd>、設定の再読込は <kbd class="p">P</kbd> <kbd>q</kbd>。</p>
+  </div>
+</section>
+
+<section>
+  <h2>ペイン <small>分割・移動（Prefix 不要）</small></h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td class="d">上下に分割（下に新ペイン）</td></tr>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td class="d">左右に分割（右に新ペイン）</td></tr>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>Esc</kbd></td><td class="d">ペインを閉じる</td></tr>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>←↑↓→</kbd></td><td class="d">ペイン間を移動</td></tr>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←↑↓→</kbd></td><td class="d">サイズ変更（5 セル）</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ペイン <small>Prefix 系</small></h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>h</kbd></td><td class="d">上下に分割</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>v</kbd></td><td class="d">左右に分割</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>"</kbd> / <kbd>%</kbd></td><td class="d">上下 / 左右に分割</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>x</kbd></td><td class="d">ペインを閉じる（確認なし）</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>z</kbd></td><td class="d">ズーム（最大化）切替</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>o</kbd></td><td class="d">次のペイン</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>Q</kbd></td><td class="d">番号を表示してペインを選択</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>タブ <small>= tmux のウィンドウ（Prefix 不要）</small></h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd>〜<kbd>9</kbd></td><td class="d">タブ 1〜9 へ移動</td></tr>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>0</kbd></td><td class="d">タブ 10 へ移動</td></tr>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd> / <kbd>→</kbd></td><td class="d">前 / 次のタブ</td></tr>
+    <tr class="custom"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd> / <kbd>→</kbd></td><td class="d">タブを左 / 右へ移動</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>タブ <small>Prefix 系</small></h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>c</kbd></td><td class="d">新規タブ（同じディレクトリ）</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>r</kbd></td><td class="d">タブ名を変更</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>k</kbd></td><td class="d">タブを閉じる（確認なし）</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>1</kbd>〜<kbd>9</kbd></td><td class="d">番号で移動</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>n</kbd> / <kbd>p</kbd></td><td class="d">次 / 前のタブ</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>w</kbd></td><td class="d">タブ一覧から選択</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>l</kbd></td><td class="d">定型レイアウトを新しいタブで開く</td></tr>
+  </table>
+  <p class="note">レイアウト：dev（左 nvim・右 2 分割）/ dev-reverse / 3-columns / 3-rows。</p>
+</section>
+
+<section>
+  <h2>ワークスペース <small>= tmux のセッション</small></h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd> / <kbd>↓</kbd></td><td class="d">前 / 次のワークスペース</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>C</kbd></td><td class="d">新規ワークスペース（名前を入力）</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>R</kbd></td><td class="d">ワークスペース名を変更</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>K</kbd></td><td class="d">ワークスペースを終了</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>P</kbd> / <kbd>N</kbd></td><td class="d">前 / 次のワークスペース</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>s</kbd></td><td class="d">ワークスペース一覧から選択</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>d</kbd></td><td class="d">デタッチ（裏で動かし続ける）</td></tr>
+  </table>
+  <p class="note">GUI を閉じても wezterm-mux-server 上でシェルが動き続け、次に起動すると再接続します。最後のワークスペースを終了すると WezTerm ごと終了します。</p>
+</section>
+
+<section>
+  <h2>コピーモード</h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>[</kbd></td><td class="d">コピーモードに入る</td></tr>
+    <tr><td class="k"><kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd> <kbd>w</kbd><kbd>b</kbd><kbd>e</kbd></td><td class="d">カーソル移動</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>u</kbd> / <kbd>d</kbd></td><td class="d">半ページ上 / 下</td></tr>
+    <tr><td class="k"><kbd>g</kbd> / <kbd>G</kbd></td><td class="d">履歴の先頭 / 末尾</td></tr>
+    <tr><td class="k"><kbd>v</kbd></td><td class="d">選択開始</td></tr>
+    <tr><td class="k"><kbd>V</kbd></td><td class="d">行単位で選択</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>v</kbd></td><td class="d">矩形選択</td></tr>
+    <tr><td class="k"><kbd>y</kbd></td><td class="d">コピーして終了（クリップボードにも）</td></tr>
+    <tr><td class="k"><kbd>q</kbd> / <kbd>Esc</kbd></td><td class="d">コピーモードを抜ける</td></tr>
+  </table>
+  <p class="note">履歴は 100,000 行まで保持。</p>
+</section>
+
+<section>
+  <h2>検索・選択</h2>
+  <table>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F</kbd></td><td class="d">履歴を検索（検索モード）</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>n</kbd> / <kbd>p</kbd></td><td class="d">検索モードで次 / 前の一致（<kbd>Esc</kbd> で終了）</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Space</kbd></td><td class="d">クイック選択（URL などを文字で選んでコピー）</td></tr>
+    <tr class="custom"><td class="k"><kbd>Shift</kbd><span class="plus">+</span><kbd>↑</kbd> / <kbd>↓</kbd></td><td class="d">前 / 次のプロンプトへスクロール</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>コピー・貼り付け・入力</h2>
+  <table>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>C</kbd></td><td class="d">コピー</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></td><td class="d">貼り付け</td></tr>
+    <tr class="custom"><td class="k"><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td class="d">改行を送る（Claude Code 用）</td></tr>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd> / <kbd>→</kbd></td><td class="d">単語単位でカーソル移動</td></tr>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Backspace</kbd></td><td class="d">前の単語を削除</td></tr>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Delete</kbd></td><td class="d">次の単語を削除</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>マウス</h2>
+  <table>
+    <tr><td class="k">ドラッグ</td><td class="d">選択してコピー</td></tr>
+    <tr><td class="k">ダブル / トリプルクリック</td><td class="d">単語 / 行を選択</td></tr>
+    <tr><td class="k">URL をクリック</td><td class="d">ブラウザで開く</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd>+ドラッグ</td><td class="d">矩形選択</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>その他</h2>
+  <table>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>q</kbd></td><td class="d">設定ファイルを再読込</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>?</kbd></td><td class="d">キーバインド一覧（あいまい検索）</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>:</kbd></td><td class="d">コマンドパレット</td></tr>
+    <tr class="custom"><td class="k"><kbd class="p">P</kbd> <kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></td><td class="d">Prefix キー自体を送る</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>=</kbd> / <kbd>-</kbd> / <kbd>0</kbd></td><td class="d">文字を大きく / 小さく / 元に戻す</td></tr>
+    <tr class="custom"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>,</kbd></td><td class="d">設定ファイルを Cursor で開く</td></tr>
+  </table>
+</section>
+
+<section class="cli">
+  <h2>シェルから使う</h2>
+  <table>
+    <tr><td class="k"><code>wezterm</code></td><td class="d">起動（unix ドメインに接続）</td></tr>
+    <tr><td class="k"><code>wezterm start -- コマンド</code></td><td class="d">コマンドを新しいウィンドウで実行</td></tr>
+    <tr><td class="k"><code>wezterm cli list</code></td><td class="d">ペイン・タブ・ワークスペース一覧</td></tr>
+    <tr><td class="k"><code>wezterm cli spawn --cwd ディレクトリ</code></td><td class="d">新しいタブを開く</td></tr>
+    <tr><td class="k"><code>wezterm show-keys</code></td><td class="d">有効なキーバインドを表示</td></tr>
+  </table>
+</section>
+
+
+</div>
+</body>
+</html>

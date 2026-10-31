@@ -307,10 +307,10 @@ local config = {
     { key = 'Enter', mods = 'ALT|SHIFT', action = split_h() },
     { key = 'Escape', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
 
-    { key = 'LeftArrow',  mods = 'CTRL|ALT', action = act.ActivatePaneDirection 'Left' },
-    { key = 'RightArrow', mods = 'CTRL|ALT', action = act.ActivatePaneDirection 'Right' },
-    { key = 'UpArrow',    mods = 'CTRL|ALT', action = act.ActivatePaneDirection 'Up' },
-    { key = 'DownArrow',  mods = 'CTRL|ALT', action = act.ActivatePaneDirection 'Down' },
+    { key = 'LeftArrow',  mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
+    { key = 'RightArrow', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
+    { key = 'UpArrow',    mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
+    { key = 'DownArrow',  mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
 
     { key = 'LeftArrow',  mods = 'CTRL|ALT|SHIFT', action = act.AdjustPaneSize { 'Left', 5 } },
     { key = 'DownArrow',  mods = 'CTRL|ALT|SHIFT', action = act.AdjustPaneSize { 'Down', 5 } },
@@ -329,14 +329,14 @@ local config = {
     { key = '9', mods = 'ALT', action = act.ActivateTab(8) },
     { key = '0', mods = 'ALT', action = act.ActivateTab(9) },
 
-    { key = 'LeftArrow',  mods = 'ALT', action = act.ActivateTabRelative(-1) },
-    { key = 'RightArrow', mods = 'ALT', action = act.ActivateTabRelative(1) },
+    { key = 'LeftArrow',  mods = 'CTRL|ALT', action = act.ActivateTabRelative(-1) },
+    { key = 'RightArrow', mods = 'CTRL|ALT', action = act.ActivateTabRelative(1) },
     { key = 'LeftArrow',  mods = 'ALT|SHIFT', action = act.MoveTabRelative(-1) },
     { key = 'RightArrow', mods = 'ALT|SHIFT', action = act.MoveTabRelative(1) },
 
     -- Session (= workspace) navigation
-    { key = 'UpArrow',   mods = 'ALT', action = act.SwitchWorkspaceRelative(-1) },
-    { key = 'DownArrow', mods = 'ALT', action = act.SwitchWorkspaceRelative(1) },
+    { key = 'UpArrow',   mods = 'CTRL|ALT', action = act.SwitchWorkspaceRelative(-1) },
+    { key = 'DownArrow', mods = 'CTRL|ALT', action = act.SwitchWorkspaceRelative(1) },
 
     -- その他
     { key = "Enter", mods = "SHIFT", action = act.SendString "\x1b\r" }, -- Shift+Enter for Claude Code
