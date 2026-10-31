@@ -15,6 +15,7 @@ paru -S --needed --noconfirm \
     fd \
     ripgrep \
     fzf \
+    skim \
     peco \
     zoxide \
     pv \
