@@ -351,6 +351,11 @@ if builtin command -v starship >/dev/null 2>&1; then
   eval "$(starship init bash)"
 fi
 
+# zoxide（z <ディレクトリ名の一部> で移動、zi で絞り込み）
+if builtin command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init bash)"
+fi
+
 # Shift+↑/↓ で ScrollToPrompt が効くように、プロンプト直前に A マーカーを送る
 if [ -n "$WEZTERM_EXECUTABLE" ] 2>/dev/null; then
   __wezterm_prompt_mark() { printf '\033]133;A\007'; }
