@@ -130,5 +130,6 @@ pre_action_fade_seconds = 2.0
     action = "command"
     enabled = true
     timeout = 900.0
-    command = "bash ~/.config/niri/launch.sh terminal --class screensaver -- cmatrix -s -b"
+    # 全画面になる前に起動すると小さい画面サイズのまま描くので、少し待ってから cmatrix を起動する
+    command = "bash ~/.config/niri/launch.sh terminal --class screensaver --bare -- sh -c 'sleep 0.5; exec cmatrix -s -b'"
     resume_command = "pkill -x cmatrix"
