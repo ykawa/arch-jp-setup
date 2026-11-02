@@ -13,6 +13,9 @@
 # スクリプトは install_selected_items "$0" で選ばれたパッケージだけを入れる。
 #   # @bundle: <パッケージ名> <一緒に入れるパッケージ名>...
 # を書くと、そのパッケージを選んだときに一緒に入れる（例: alacritty と zellij）。
+#   # @release: <パッケージ名> <owner>/<repo>
+# を書くと、そのパッケージは paru ではなく GitHub の最新リリース（プレリリースを含む）にある
+# <パッケージ名>-*.pkg.tar.zst を SHA256SUMS で検証してから pacman -U で入れる（自分用の fork 版など）。
 # 選択は GROUP_SELECTION_FILE に "<グループID>:<パッケージ名> on|off" として保存される。
 
 GROUP_SELECTION_FILE="$HOME/.config/arch-jp-setup/selection"
@@ -199,17 +202,64 @@ selected_items() {
     done < <(group_items "$script") | awk 'NF && !seen[$0]++'
 }
 
+# @release で指定したリポジトリ（なければ空）
+release_repo() {
+    sed -n "s/^# @release:[[:space:]]*$2[[:space:]]\{1,\}//p" "$1" | awk 'NR == 1 { print $1 }'
+}
+
+# GitHub の最新リリースからパッケージを取得し、SHA256SUMS で検証して入れる。
+# 衝突するパッケージ（公式版など）は置き換える。失敗したら 1 を返す
+install_release_package() {
+    local pkg="$1" repo="$2" urls url pkg_url sums_url dir status
+    echo "Installing $pkg from https://github.com/$repo/releases ..."
+    urls=$(curl -fsSL "https://api.github.com/repos/$repo/releases?per_page=1" \
+        | grep -o '"browser_download_url": *"[^"]*"' | sed 's/.*: *"//; s/"$//') || return 1
+    pkg_url=""
+    sums_url=""
+    while IFS= read -r url; do
+        case "${url##*/}" in
+            "$pkg"-*.pkg.tar.zst) pkg_url="$url" ;;
+            SHA256SUMS) sums_url="$url" ;;
+        esac
+    done <<< "$urls"
+    if [ -z "$pkg_url" ] || [ -z "$sums_url" ]; then
+        echo "  $pkg のパッケージか SHA256SUMS がリリースにありません"
+        return 1
+    fi
+    dir=$(mktemp -d)
+    status=0
+    (
+        cd "$dir" &&
+        curl -fsSLO "$pkg_url" &&
+        curl -fsSLO "$sums_url" &&
+        sha256sum --check --ignore-missing SHA256SUMS &&
+        # --ask 4: 衝突するパッケージの削除に同意する
+        sudo pacman -U --needed --noconfirm --ask 4 "./${pkg_url##*/}"
+    ) || status=1
+    rm -rf "$dir"
+    return $status
+}
+
 # 選ばれた @item のパッケージを入れる（追加の paru オプションは引数で渡す）。
 # 失敗しても止めない（入れられないパッケージが1つあっても全体を止めないため）
 install_selected_items() {
-    local script="$1"
+    local script="$1" pkg repo
     shift
-    local -a packages
-    mapfile -t packages < <(selected_items "$script")
-    if [ ${#packages[@]} -eq 0 ]; then
+    local -a selected packages
+    mapfile -t selected < <(selected_items "$script")
+    if [ ${#selected[@]} -eq 0 ]; then
         echo "選択されたパッケージがありません"
         return 0
     fi
+    for pkg in "${selected[@]}"; do
+        repo=$(release_repo "$script" "$pkg")
+        if [ -n "$repo" ]; then
+            install_release_package "$pkg" "$repo" || echo "  $pkg を入れられませんでした（続行します）"
+        else
+            packages+=("$pkg")
+        fi
+    done
+    [ ${#packages[@]} -gt 0 ] || return 0
     echo "Installing: ${packages[*]}"
     paru -S --needed --noconfirm "$@" "${packages[@]}" || true
 }
