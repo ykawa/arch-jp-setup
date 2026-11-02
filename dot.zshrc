@@ -519,24 +519,26 @@ periodic() {
 PROMPT='[%1~]${vcs_info_msg_0_}'$'\n[%n@%m]$ '
 
 # =============================================================================
-# Starship Configuration
+# zoxide config
 # =============================================================================
-
-if builtin command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
-fi
-
-# zoxide（z <ディレクトリ名の一部> で移動、zi で絞り込み）
 if builtin command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
 fi
 
+# =============================================================================
+# Starship Configuration
+# =============================================================================
+if builtin command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+# =============================================================================
 # AI agent aliases and tmux dev layouts
+# =============================================================================
 [ -e $HOME/.zshrc_ai ] && . $HOME/.zshrc_ai
 
 # =============================================================================
 # Local Configuration
 # =============================================================================
-
 [ -e $HOME/.zshrc_local ] && . $HOME/.zshrc_local
 

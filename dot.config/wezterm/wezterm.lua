@@ -179,6 +179,10 @@ local prefix_keys = {
   -- Copy mode (vi キー。v で選択開始、y でコピー)
   { key = '[', action = act.ActivateCopyMode },
 
+  -- Floating pane (prefix の後に f / Shift+F)
+  { key = 'f', action = act.ToggleFloatingPane },
+  { key = 'F', mods = 'SHIFT', action = act.SpawnCommandInNewFloatingPane { domain = 'CurrentPaneDomain' } },
+
   -- Pane
   { key = 'h', action = split_v() },
   { key = 'v', action = split_h() },
@@ -200,7 +204,16 @@ local prefix_keys = {
 
   -- Session (= workspace)
   { key = 'R', mods = 'SHIFT', action = prompt('Rename session', function(window, pane, line) mux.rename_workspace(window:active_workspace(), line) end) },
-  { key = 'C', mods = 'SHIFT', action = prompt('New session name', function(window, pane, line) window:perform_action(act.SwitchToWorkspace { name = line }, pane) end) },
+  { key = 'C', mods = 'SHIFT', action = prompt('New session name', function(window, pane, line)
+    local cwd = pane:get_current_working_dir()
+    window:perform_action(act.SwitchToWorkspace {
+      name = line,
+      spawn = {
+        domain = { DomainName = pane:get_domain_name() },
+        cwd = cwd and cwd.file_path or nil,
+      },
+    }, pane)
+  end) },
   { key = 'K', mods = 'SHIFT', action = wezterm.action_callback(kill_workspace) },
   { key = 'P', mods = 'SHIFT', action = act.SwitchWorkspaceRelative(-1) },
   { key = 'N', mods = 'SHIFT', action = act.SwitchWorkspaceRelative(1) },
@@ -233,7 +246,7 @@ local config = {
   font_size = 12.0,
   line_height = 1.0,
   enable_scroll_bar = true,
-  scrollback_lines = 100000,
+  scrollback_lines = 50000, -- tmux history-limit
   hide_tab_bar_if_only_one_tab = false, -- tmux のステータスバーのように常に表示
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = false, -- status-position top
@@ -303,6 +316,8 @@ local config = {
     { key = 'b', mods = 'CTRL', action = prefix },
 
     -- Pane Controls (prefix なし)
+    { key = 'f', mods = 'ALT', action = act.ToggleFloatingPane },
+    { key = 'F', mods = 'ALT|SHIFT', action = act.SpawnCommandInNewFloatingPane { domain = 'CurrentPaneDomain' } },
     { key = 'Enter', mods = 'ALT', action = split_v() },
     { key = 'Enter', mods = 'ALT|SHIFT', action = split_h() },
     { key = 'Escape', mods = 'ALT', action = act.CloseCurrentPane { confirm = false } },
@@ -351,6 +366,16 @@ local config = {
 
   key_tables = {
     prefix = prefix_keys,
+    -- 標準の vi 操作を維持して、tmux の v / y を明示する。
+    copy_mode = (function()
+      local keys = wezterm.gui.default_key_tables().copy_mode
+      table.insert(keys, { key = 'v', mods = 'NONE', action = act.CopyMode { SetSelectionMode = 'Cell' } })
+      table.insert(keys, { key = 'y', mods = 'NONE', action = act.Multiple {
+        act.CopyTo 'ClipboardAndPrimarySelection',
+        act.CopyMode 'Close',
+      } })
+      return keys
+    end)(),
   },
 
   -- 選択時の単語区切り設定
@@ -362,5 +387,20 @@ local config = {
 -- config.color_scheme = 'Dark Violet (base16)'
 -- config.color_scheme = 'Tokyo Night Moon'
 config.color_scheme = "Noctalia"
+
+-- floating pane の移動。対応前のGUIが再読み込みしても設定エラーにしない。
+local can_move_floating = pcall(function()
+  return act.MoveFloatingPane { 'Left', 5 }
+end)
+if can_move_floating then
+  for _, binding in ipairs {
+    { 'h', 'Left' }, { 'j', 'Down' }, { 'k', 'Up' }, { 'l', 'Right' },
+  } do
+    table.insert(config.keys, {
+      key = binding[1], mods = 'CTRL|ALT',
+      action = act.MoveFloatingPane { binding[2], 5 },
+    })
+  end
+end
 
 return config
