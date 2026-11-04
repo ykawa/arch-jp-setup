@@ -3,7 +3,7 @@ local mux = wezterm.mux
 local act = wezterm.action
 
 -- リサイズが落ち着いたら、対応する通常ペインのレイアウトを再調整する。
-local auto_fit = loadfile(os.getenv('HOME') .. '/.local/share/wezterm-layouts/auto-fit.lua')
+local auto_fit = loadfile(os.getenv('HOME') .. '/.config/wezterm/auto-fit.lua')
 if auto_fit then auto_fit()(wezterm) end
 
 local function maximize(gui_window)

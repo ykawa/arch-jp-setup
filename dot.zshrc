@@ -343,7 +343,7 @@ wezlayout() {
   emulate -L zsh
   setopt pipefail
   local layout=${1:-dev}
-  if [[ $layout == --help || $layout == -h ]]; then
+  if [[ $layout == --help || $layout == -h || ${2:-} == --help || ${2:-} == -h ]]; then
     print 'Usage: wezlayout [dev|wide|grid]'
     print '  wezdev   : 左を広く、右を上下2段（3ペイン）'
     print '  wezwide  : 上を広く、下を左右2列（3ペイン）'
@@ -405,7 +405,7 @@ wezwide() { wezlayout wide "$@"; }
 wezgrid() { wezlayout grid "$@"; }
 
 # 既存の通常ペインを、現在のタブサイズに合わせて再調整する。
-wezfit() { command python3 "$HOME/.local/share/wezterm-layouts/wezfit.py" "$@"; }
+wezfit() { command python3 "$HOME/.config/wezterm/wezfit.py" "$@"; }
 
 # WezTerm: Enable ScrollToPrompt with Shift+Up/Down
 if [ -n "$WEZTERM_EXECUTABLE" ] 2>/dev/null; then
