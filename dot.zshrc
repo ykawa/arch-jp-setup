@@ -305,6 +305,108 @@ zstyle ':vcs_info:*' use-simple true
 # Terminal Integration
 # =============================================================================
 
+# WezTerm: 現在の通常ペインを等幅の3列に分割する
+wez3() {
+  emulate -L zsh
+  setopt pipefail
+  if [[ -z ${WEZTERM_PANE:-} ]]; then
+    print -u2 'wez3: WezTerm の通常ペイン内で実行してください'
+    return 1
+  fi
+
+  local cols right_pane
+  cols=$(command wezterm cli list --format json | command python3 -c '
+import json, sys
+pane = next((p for p in json.load(sys.stdin) if str(p["pane_id"]) == sys.argv[1]), None)
+if pane is None or pane.get("is_floating", False):
+    sys.exit("wez3: 分割対象の通常ペインが見つかりません")
+cols = pane["size"]["cols"]
+if cols < 5:
+    sys.exit("wez3: 3列に分割するにはペインの幅が足りません")
+print(cols)
+' "$WEZTERM_PANE") || return 1
+
+  # 分割線2文字分を除き、左1/3と右2/3に分けてから右側を二分する。
+  local -i left_width=$(( (cols - 2) / 3 ))
+  local -i right_width=$(( cols - left_width - 1 ))
+  local -i third_width=$(( right_width / 2 ))
+  right_pane=$(command wezterm cli split-pane --pane-id "$WEZTERM_PANE" \
+    --right --cells "$right_width" --cwd "$PWD") || return 1
+  command wezterm cli split-pane --pane-id "$right_pane" \
+    --right --cells "$third_width" --cwd "$PWD" >/dev/null || return 1
+  command wezterm cli activate-pane --pane-id "$WEZTERM_PANE"
+}
+
+# WezTerm: 通常ペインの開発用レイアウト（アプリは自動起動しない）
+# wezdev: 左65% + 右上下 / wezwide: 上75% + 下左右 / wezgrid: 均等2x2
+wezlayout() {
+  emulate -L zsh
+  setopt pipefail
+  local layout=${1:-dev}
+  if [[ $layout == --help || $layout == -h ]]; then
+    print 'Usage: wezlayout [dev|wide|grid]'
+    print '  wezdev   : 左を広く、右を上下2段（3ペイン）'
+    print '  wezwide  : 上を広く、下を左右2列（3ペイン）'
+    print '  wezgrid  : 均等な2x2（4ペイン）'
+    print '現在の通常ペイン内を分割し、現在のディレクトリを引き継ぎます。'
+    return 0
+  fi
+  if (( $# > 1 )) || [[ $layout != dev && $layout != wide && $layout != grid ]]; then
+    print -u2 'Usage: wezlayout [dev|wide|grid]'
+    return 1
+  fi
+  if [[ -z ${WEZTERM_PANE:-} ]]; then
+    print -u2 'wezlayout: WezTerm の通常ペイン内で実行してください'
+    return 1
+  fi
+
+  local dimensions cols rows side bottom
+  dimensions=$(command wezterm cli list --format json | command python3 -c '
+import json, sys
+pane = next((p for p in json.load(sys.stdin) if str(p["pane_id"]) == sys.argv[1]), None)
+if pane is None or pane.get("is_floating", False):
+    sys.exit("wezlayout: 分割対象の通常ペインが見つかりません")
+print(pane["size"]["cols"], pane["size"]["rows"])
+' "$WEZTERM_PANE") || return 1
+  read -r cols rows <<< "$dimensions"
+  # 最小サイズでも各ペインと分割線を確保できることを確認する。
+  if (( cols < 5 || rows < 5 )); then
+    print -u2 'wezlayout: ペインが小さすぎます（幅・高さとも5文字以上必要）'
+    return 1
+  fi
+
+  case $layout in
+    dev)
+      side=$(command wezterm cli split-pane --pane-id "$WEZTERM_PANE" \
+        --right --percent 35 --cwd "$PWD") || return 1
+      command wezterm cli split-pane --pane-id "$side" \
+        --bottom --percent 50 --cwd "$PWD" >/dev/null || return 1
+      ;;
+    wide)
+      bottom=$(command wezterm cli split-pane --pane-id "$WEZTERM_PANE" \
+        --bottom --percent 25 --cwd "$PWD") || return 1
+      command wezterm cli split-pane --pane-id "$bottom" \
+        --right --percent 50 --cwd "$PWD" >/dev/null || return 1
+      ;;
+    grid)
+      side=$(command wezterm cli split-pane --pane-id "$WEZTERM_PANE" \
+        --right --percent 50 --cwd "$PWD") || return 1
+      command wezterm cli split-pane --pane-id "$WEZTERM_PANE" \
+        --bottom --percent 50 --cwd "$PWD" >/dev/null || return 1
+      command wezterm cli split-pane --pane-id "$side" \
+        --bottom --percent 50 --cwd "$PWD" >/dev/null || return 1
+      ;;
+  esac
+  command wezterm cli activate-pane --pane-id "$WEZTERM_PANE"
+}
+
+wezdev() { wezlayout dev "$@"; }
+wezwide() { wezlayout wide "$@"; }
+wezgrid() { wezlayout grid "$@"; }
+
+# 既存の通常ペインを、現在のタブサイズに合わせて再調整する。
+wezfit() { command python3 "$HOME/.local/share/wezterm-layouts/wezfit.py" "$@"; }
+
 # WezTerm: Enable ScrollToPrompt with Shift+Up/Down
 if [ -n "$WEZTERM_EXECUTABLE" ] 2>/dev/null; then
   wezterm_precmd() {

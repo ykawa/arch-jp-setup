@@ -2,6 +2,10 @@ local wezterm = require 'wezterm'
 local mux = wezterm.mux
 local act = wezterm.action
 
+-- リサイズが落ち着いたら、対応する通常ペインのレイアウトを再調整する。
+local auto_fit = loadfile(os.getenv('HOME') .. '/.local/share/wezterm-layouts/auto-fit.lua')
+if auto_fit then auto_fit()(wezterm) end
+
 local function maximize(gui_window)
   if not gui_window then return end
   -- OS別の最大化処理
@@ -376,6 +380,13 @@ local config = {
       } })
       return keys
     end)(),
+  },
+
+  -- マウスを使うアプリ (nvim, tmux など) の中でも中ボタンで貼り付ける
+  -- アプリに離した時のイベントだけが届かないよう Up も無効化する
+  mouse_bindings = {
+    { event = { Down = { streak = 1, button = 'Middle' } }, mods = 'NONE', mouse_reporting = true, action = act.PasteFrom 'PrimarySelection' },
+    { event = { Up = { streak = 1, button = 'Middle' } }, mods = 'NONE', mouse_reporting = true, action = act.Nop },
   },
 
   -- 選択時の単語区切り設定
