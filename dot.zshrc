@@ -407,6 +407,58 @@ wezgrid() { wezlayout grid "$@"; }
 # 既存の通常ペインを、現在のタブサイズに合わせて再調整する。
 wezfit() { command python3 "$HOME/.config/wezterm/wezfit.py" "$@"; }
 
+# zellij: 現在のペインをほぼ等幅の3列に分割する（wez3 の zellij 版）
+# resize はタブ幅の約5%刻みなので、幅には数文字の差が残る。
+# override-layout は使わない（既存のペインを残せず、指定によっては他のタブまで閉じる）。
+zj3() {
+  emulate -L zsh
+  setopt pipefail
+  if [[ -z ${ZELLIJ_PANE_ID:-} ]]; then
+    print -u2 'zj3: zellij のペイン内で実行してください'
+    return 1
+  fi
+
+  # 指定ペインの幅と、そのタブの幅を返す。
+  _zj3_size() {
+    command zellij action list-panes --json | command python3 -c '
+import json, sys
+panes = [p for p in json.load(sys.stdin) if not p["is_plugin"]]
+pane = next((p for p in panes if str(p["id"]) == sys.argv[1]), None)
+if pane is None or pane["is_floating"]:
+    sys.exit("zj3: 分割対象のタイルペインが見つかりません")
+tab = [p for p in panes if p["tab_id"] == pane["tab_id"] and not p["is_floating"]]
+print(pane["pane_columns"], max(p["pane_x"] + p["pane_columns"] for p in tab))
+' "$1"
+  }
+
+  local origin=terminal_$ZELLIJ_PANE_ID middle right size
+  local -i cols tab_cols target step i
+  size=$(_zj3_size "$ZELLIJ_PANE_ID") || return 1
+  read -r cols tab_cols <<< "$size"
+  if (( cols < 15 )); then
+    print -u2 'zj3: 3列に分割するにはペインの幅が足りません'
+    return 1
+  fi
+  target=$(( cols / 3 ))
+  step=$(( tab_cols / 20 > 0 ? tab_cols / 20 : 1 ))
+
+  middle=$(command zellij action new-pane --direction right --cwd "$PWD") || return 1
+  right=$(command zellij action new-pane --direction right --cwd "$PWD") || return 1
+
+  # 分割直後は 1/2, 1/4, 1/4。左を縮めてから、右を広げて中央の幅を詰める。
+  for (( i = 0; i < 20; i++ )); do
+    size=$(_zj3_size "$ZELLIJ_PANE_ID") || return 1
+    (( ${size%% *} - target > step / 2 )) || break
+    command zellij action resize --pane-id "$origin" decrease right || return 1
+  done
+  for (( i = 0; i < 20; i++ )); do
+    size=$(_zj3_size "${right#terminal_}") || return 1
+    (( target - ${size%% *} > step / 2 )) || break
+    command zellij action resize --pane-id "$right" increase left || return 1
+  done
+  command zellij action focus-pane-id "$origin"
+}
+
 # WezTerm: Enable ScrollToPrompt with Shift+Up/Down
 if [ -n "$WEZTERM_EXECUTABLE" ] 2>/dev/null; then
   wezterm_precmd() {
