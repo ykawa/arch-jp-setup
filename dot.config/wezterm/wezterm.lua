@@ -6,6 +6,21 @@ local act = wezterm.action
 local auto_fit = loadfile(os.getenv('HOME') .. '/.config/wezterm/auto-fit.lua')
 if auto_fit then auto_fit()(wezterm) end
 
+-- niri 経由でURLを開き、ブラウザにフォーカス用のactivation tokenを渡す。
+if os.getenv('NIRI_SOCKET') then
+  wezterm.on('open-uri', function(window, pane, uri)
+    local scheme = uri:match('^([%a][%w+.-]*):')
+    scheme = scheme and scheme:lower()
+    if scheme == 'http' or scheme == 'https' then
+      local ok = wezterm.run_child_process {
+        'niri', 'msg', 'action', 'spawn', '--', 'xdg-open', uri,
+      }
+      if ok then return false end -- niriへ渡せたので標準の二重オープンを防ぐ
+      -- niriへの接続に失敗した場合はWezTerm標準の処理へ戻す。
+    end
+  end)
+end
+
 local function maximize(gui_window)
   if not gui_window then return end
   -- OS別の最大化処理
