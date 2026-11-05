@@ -8,6 +8,8 @@ font_family = "Meiryo UI"
 avatar_path = "~/.local/share/arch-jp-setup/images/avatar.png"
 # v4: autoPasteClipboard = false; selecting an entry only copies it
 clipboard_auto_paste = "off"
+# v4: polkit-agent plugin; v5 has a built-in agent that is off by default
+polkit_agent = true
 
 [shell.launcher]
 # Full layout (view tabs, profile, toolbar); width range is 560-1100.
