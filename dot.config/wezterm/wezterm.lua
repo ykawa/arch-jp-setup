@@ -212,6 +212,14 @@ local prefix_keys = {
   { key = 'o', action = act.ActivatePaneDirection 'Next' },
   { key = 'q', mods = 'SHIFT', action = act.PaneSelect },
 
+  -- アクティブな pane のディレクトリを Zed で開く
+  { key = 'e', action = wezterm.action_callback(function(window, pane)
+    local cwd = pane:get_current_working_dir()
+    if cwd then
+      wezterm.background_child_process { 'zeditor', cwd.file_path }
+    end
+  end) },
+
   -- Window (= tab)
   { key = 'r', action = prompt('Rename window', function(window, pane, line) window:active_tab():set_title(line) end) },
   { key = 'c', action = act.SpawnTab 'CurrentPaneDomain' },
