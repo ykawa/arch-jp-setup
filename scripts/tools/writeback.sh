@@ -2,7 +2,7 @@
 # ~/.local/share/arch-jp-setup（INSTALL_DIR）の変更を git の作業ディレクトリへ書き戻す
 #
 #   bash writeback.sh <git の作業ディレクトリ>
-#   例: bash ~/.local/share/arch-jp-setup/scripts/tools/writeback.sh ~/Study/arch-jp-setup
+#   例: bash ~/.local/share/arch-jp-setup/scripts/tools/writeback.sh ~/Projects/arch-jp-setup
 #
 # - 書き戻し先に未コミットの変更があれば中止する（git で確認・取り消しができるように）
 # - 書き戻し先の .gitignore（グローバル ignore 含む）で除外されるファイルは対象外
