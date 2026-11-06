@@ -1,0 +1,3 @@
+# SC2155 は無効にする。local x=$(cmd) を分割すると、失敗を正常系として扱うコマンドが
+# set -e で止まるようになる（systemd-detect-virt は実機で none を出して 1 で終わる）
+disable=SC2155

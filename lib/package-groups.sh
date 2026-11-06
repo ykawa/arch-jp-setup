@@ -93,7 +93,7 @@ tui_available() {
 # TUI がキャンセルされたら 1 を返す。
 select_groups() {
     local repo_root="$1"
-    local -a scripts labels preselected chosen lines item_lines
+    local -a scripts labels preselected chosen lines
     local script id label state selected line selected_csv output
     local -A group_on item_on
 
@@ -196,7 +196,7 @@ selected_items() {
         if [ "$(item_state "$script" "$line")" = "on" ]; then
             pkg="${line%% *}"
             echo "$pkg"
-            read -ra bundled <<< "$(sed -n "s/^# @bundle:[[:space:]]*$pkg[[:space:]]\{1,\}//p" "$script")"
+            read -ra bundled <<< "$(sed -n "s/^# @bundle:[[:space:]]*${pkg}[[:space:]]\{1,\}//p" "$script")"
             printf '%s\n' "${bundled[@]}"
         fi
     done < <(group_items "$script") | awk 'NF && !seen[$0]++'
