@@ -422,16 +422,17 @@ local config = {
 -- config.color_scheme = 'Tokyo Night Moon'
 config.color_scheme = "Noctalia"
 
--- floating pane の移動。対応前のGUIが再読み込みしても設定エラーにしない。
+-- floating pane の移動。Ctrl+Alt+H は niri のクリップボード履歴が使う。
+-- 対応前のGUIが再読み込みしても設定エラーにしない。
 local can_move_floating = pcall(function()
   return act.MoveFloatingPane { 'Left', 5 }
 end)
 if can_move_floating then
   for _, binding in ipairs {
-    { 'h', 'Left' }, { 'j', 'Down' }, { 'k', 'Up' }, { 'l', 'Right' },
+    { 'LeftArrow', 'Left' }, { 'DownArrow', 'Down' }, { 'UpArrow', 'Up' }, { 'RightArrow', 'Right' },
   } do
     table.insert(config.keys, {
-      key = binding[1], mods = 'CTRL|ALT',
+      key = binding[1], mods = 'CTRL|SHIFT',
       action = act.MoveFloatingPane { binding[2], 5 },
     })
   end
