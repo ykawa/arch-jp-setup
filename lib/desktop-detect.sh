@@ -16,7 +16,7 @@ detect_desktop_environment() {
             *COSMIC*)
                 desktop_env="cosmic"
                 ;;
-            *Cinnamon*|*X-Cinnamon*)
+            *Cinnamon*)
                 desktop_env="cinnamon"
                 ;;
             *niri*)
