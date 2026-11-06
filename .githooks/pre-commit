@@ -16,6 +16,7 @@ else
     echo "pre-commit: shfmt がないため整形をスキップします" >&2
 fi
 
+# ファイル名の [ や * がパターンとして別のファイルに一致しないよう、--literal-pathspecs を付ける
 for file in "${files[@]}"; do
     case "$file" in
         *.sh | .githooks/pre-commit) ;;
@@ -32,7 +33,7 @@ for file in "${files[@]}"; do
 
     # 未ステージの変更があるファイルは、ステージし直すと変更が混ざるので
     # ステージした内容の検査だけにする（--filename は方言と .editorconfig の判定に使う）
-    if ! git diff --quiet -- "$file"; then
+    if ! git --literal-pathspecs diff --quiet -- "$file"; then
         if ! git show ":$file" | shfmt --filename="$file" -d; then
             echo "pre-commit: 未ステージの変更があるため整形できません: $file" >&2
             echo "shfmt -w で整形してステージし直してください" >&2
@@ -43,7 +44,7 @@ for file in "${files[@]}"; do
 
     # ステージした内容を整形してステージし直す
     shfmt -w -- "$file"
-    git add -- "$file"
+    git --literal-pathspecs add -- "$file"
 done
 
 bash "$REPO_ROOT/scripts/tools/check-private.sh" --staged "${files[@]}"
