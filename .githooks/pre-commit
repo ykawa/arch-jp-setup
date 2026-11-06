@@ -1,5 +1,5 @@
 #!/bin/bash
-# コミット前にシェルスクリプトを整形し、PC 固有の情報（ユーザー名・絶対パスなど）が入っていないか検査する
+# コミット前にシェルスクリプトの構文検査と整形をして、PC 固有の情報（ユーザー名・絶対パスなど）が入っていないか検査する
 # 有効化: git config core.hooksPath .githooks（scripts/tools/writeback.sh が設定する）
 set -e
 
@@ -8,31 +8,42 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 mapfile -d '' files < <(git diff --cached --name-only --diff-filter=ACMR -z)
 [ ${#files[@]} -gt 0 ] || exit 0
 
-# ステージしたファイルを整形してステージし直す。shfmt がなければ CI の検査に任せる
+# shfmt がなければ整形は CI の検査に任せる
+has_shfmt=false
 if command -v shfmt &>/dev/null; then
-    for file in "${files[@]}"; do
-        case "$file" in
-            *.sh | .githooks/pre-commit) ;;
-            *) continue ;;
-        esac
-        [ ! -L "$file" ] || continue
-
-        # 未ステージの変更があるファイルは、ステージし直すと変更が混ざるので
-        # ステージした内容の検査だけにする（--filename は方言と .editorconfig の判定に使う）
-        if ! git diff --quiet -- "$file"; then
-            if ! git show ":$file" | shfmt --filename="$file" -d; then
-                echo "pre-commit: 未ステージの変更があるため整形できません: $file" >&2
-                echo "shfmt -w で整形してステージし直してください" >&2
-                exit 1
-            fi
-            continue
-        fi
-
-        shfmt -w -- "$file"
-        git add -- "$file"
-    done
+    has_shfmt=true
 else
     echo "pre-commit: shfmt がないため整形をスキップします" >&2
 fi
+
+for file in "${files[@]}"; do
+    case "$file" in
+        *.sh | .githooks/pre-commit) ;;
+        *) continue ;;
+    esac
+    [ ! -L "$file" ] || continue
+
+    if ! git show ":$file" | bash -n; then
+        echo "pre-commit: 構文エラーがあります: $file" >&2
+        exit 1
+    fi
+
+    "$has_shfmt" || continue
+
+    # 未ステージの変更があるファイルは、ステージし直すと変更が混ざるので
+    # ステージした内容の検査だけにする（--filename は方言と .editorconfig の判定に使う）
+    if ! git diff --quiet -- "$file"; then
+        if ! git show ":$file" | shfmt --filename="$file" -d; then
+            echo "pre-commit: 未ステージの変更があるため整形できません: $file" >&2
+            echo "shfmt -w で整形してステージし直してください" >&2
+            exit 1
+        fi
+        continue
+    fi
+
+    # ステージした内容を整形してステージし直す
+    shfmt -w -- "$file"
+    git add -- "$file"
+done
 
 bash "$REPO_ROOT/scripts/tools/check-private.sh" --staged "${files[@]}"
