@@ -22,7 +22,10 @@ for file in "${files[@]}"; do
         *.sh | .githooks/pre-commit) ;;
         *) continue ;;
     esac
-    [ ! -L "$file" ] || continue
+
+    # 作業ツリーではなくステージした内容の種別で、シンボリックリンクを除く
+    entry="$(git --literal-pathspecs ls-files --stage -- "$file")"
+    [ "${entry%% *}" != "120000" ] || continue
 
     if ! git show ":$file" | bash -n; then
         echo "pre-commit: 構文エラーがあります: $file" >&2
