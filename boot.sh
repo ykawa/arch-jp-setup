@@ -9,7 +9,7 @@ echo "==================================================="
 echo ""
 
 # Check if git is available
-if ! command -v git &> /dev/null; then
+if ! command -v git &>/dev/null; then
     echo "Error: git is required but not installed."
     echo "Please install git first: sudo pacman -S git"
     exit 1

@@ -18,7 +18,7 @@ fi
 
 if [ ! -e "$HOME/.tool-versions" ]; then
     echo "Creating ~/.tool-versions..."
-    echo "node lts" > "$HOME/.tool-versions"
+    echo "node lts" >"$HOME/.tool-versions"
 fi
 
 echo ""

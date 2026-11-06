@@ -63,7 +63,10 @@ CUSTOM_KEYS=("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/
 [ -n "$TERMINAL_APP" ] && CUSTOM_KEYS+=("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/'")
 [ -n "$BROWSER_APP" ] && CUSTOM_KEYS+=("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/'")
 CUSTOM_KEYS+=("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/'" "'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/'" "'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6/'")
-gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "[$(IFS=,; echo "${CUSTOM_KEYS[*]}" | sed "s/,/, /g")]"
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "[$(
+    IFS=,
+    echo "${CUSTOM_KEYS[*]}" | sed "s/,/, /g"
+)]"
 
 # Set ulauncher to Super+Space
 gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"

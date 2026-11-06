@@ -14,7 +14,7 @@ fi
 SUDOERS_FILE="/etc/sudoers.d/99-$CURRENT_USER-nopasswd"
 
 # Create the sudoers entry with explicit specification
-echo "$CURRENT_USER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "$SUDOERS_FILE" > /dev/null
+echo "$CURRENT_USER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "$SUDOERS_FILE" >/dev/null
 
 sudo chmod 440 "$SUDOERS_FILE"
 

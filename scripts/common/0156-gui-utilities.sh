@@ -21,7 +21,7 @@ AUTOSTART_DIR="$HOME/.config/autostart"
 # LocalSend はログイン時にトレイへ隠して起動する（アプリの自動起動設定と同じファイル名）
 if pacman -Q localsend &>/dev/null; then
     mkdir -p "$AUTOSTART_DIR"
-    cat > "$AUTOSTART_DIR/localsend_app.desktop" << 'EOF'
+    cat >"$AUTOSTART_DIR/localsend_app.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
 Name=localsend_app
@@ -38,7 +38,7 @@ fi
 # Flameshot はログイン時にトレイへ常駐させる（アプリの自動起動設定と同じファイル名）
 if pacman -Q flameshot &>/dev/null; then
     mkdir -p "$AUTOSTART_DIR"
-    cat > "$AUTOSTART_DIR/Flameshot.desktop" << 'EOF'
+    cat >"$AUTOSTART_DIR/Flameshot.desktop" <<'EOF'
 [Desktop Entry]
 Name=flameshot
 Icon=flameshot

@@ -29,7 +29,7 @@ elif [ -e "$AUTOSTART_FILE" ]; then
     echo "$AUTOSTART_FILE already exists, skipping"
 else
     mkdir -p "$(dirname "$AUTOSTART_FILE")"
-    cat > "$AUTOSTART_FILE" << 'EOF'
+    cat >"$AUTOSTART_FILE" <<'EOF'
 [Desktop Entry]
 Type=Application
 Name=Firefox

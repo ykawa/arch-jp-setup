@@ -37,7 +37,7 @@ elif grep -q "^# deny =" "$FAILLOCK_CONF"; then
     sudo sed -i 's/^# deny = .*/deny = 0/' "$FAILLOCK_CONF"
 else
     # Add deny = 0 to the file
-    echo "deny = 0" | sudo tee -a "$FAILLOCK_CONF" > /dev/null
+    echo "deny = 0" | sudo tee -a "$FAILLOCK_CONF" >/dev/null
 fi
 
 echo "Faillock configuration updated successfully."

@@ -31,16 +31,22 @@ IFACE_ARG=""
 for arg in "$@"; do
     case "$arg" in
         --dry-run) DRY_RUN=true ;;
-        --undo)    UNDO=true ;;
-        --*)       echo "Unknown argument: $arg" >&2; exit 1 ;;
-        *)         IFACE_ARG="$arg" ;;
+        --undo) UNDO=true ;;
+        --*)
+            echo "Unknown argument: $arg" >&2
+            exit 1
+            ;;
+        *) IFACE_ARG="$arg" ;;
     esac
 done
 
 # ── helpers ──────────────────────────────────────────────────────────────────
-die()  { echo "ERROR: $*" >&2; exit 1; }
+die() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
 info() { echo "[fix-e1000e] $*"; }
-run()  { $DRY_RUN && echo "  [DRY RUN] $*" || "$@"; }
+run() { $DRY_RUN && echo "  [DRY RUN] $*" || "$@"; }
 
 [[ $EUID -eq 0 ]] || die "Run as root (sudo $0)"
 
@@ -135,7 +141,7 @@ EOF
     echo "  [DRY RUN] systemctl enable ${SERVICE_NAME}.service"
     echo "  [DRY RUN] systemctl start ${SERVICE_NAME}.service"
 else
-    tee "$SERVICE_FILE" > /dev/null <<EOF
+    tee "$SERVICE_FILE" >/dev/null <<EOF
 [Unit]
 Description=Disable TSO/GSO on ${IFACE} (e1000e Hardware Unit Hang fix)
 After=network.target

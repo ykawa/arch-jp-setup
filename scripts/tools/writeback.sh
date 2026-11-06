@@ -80,7 +80,7 @@ for entry in "${LOCAL_LINES[@]}"; do
     dest_line=$(grep -m1 -E -- "$regex" "$DEST/$file" || true)
     [ -n "$dest_line" ] || continue
     awk -v re="$regex" -v line="$dest_line" '$0 ~ re { print line; next } { print }' \
-        "$STAGE/$file" > "$STAGE/$file.tmp"
+        "$STAGE/$file" >"$STAGE/$file.tmp"
     mv "$STAGE/$file.tmp" "$STAGE/$file"
 done
 
@@ -97,7 +97,7 @@ for file in "${LOCAL_BLOCKS[@]}"; do
         $0 == begin { print; for (i = 1; i <= n; i++) print block[i]; skip = 1; next }
         $0 == end { skip = 0 }
         !skip { print }
-    ' "$STAGE/$file" > "$STAGE/$file.tmp"
+    ' "$STAGE/$file" >"$STAGE/$file.tmp"
     mv "$STAGE/$file.tmp" "$STAGE/$file"
 done
 

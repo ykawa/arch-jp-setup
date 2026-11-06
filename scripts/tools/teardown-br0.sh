@@ -20,13 +20,19 @@ DRY_RUN=false
 for arg in "$@"; do
     case "$arg" in
         --dry-run) DRY_RUN=true ;;
-        *) echo "Unknown argument: $arg" >&2; exit 1 ;;
+        *)
+            echo "Unknown argument: $arg" >&2
+            exit 1
+            ;;
     esac
 done
 
-die()  { echo "ERROR: $*" >&2; exit 1; }
+die() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
 info() { echo "[teardown-br0] $*"; }
-run()  { $DRY_RUN && echo "  [DRY RUN] $*" || "$@"; }
+run() { $DRY_RUN && echo "  [DRY RUN] $*" || "$@"; }
 
 [[ $EUID -eq 0 ]] || die "Run as root (sudo $0)"
 
@@ -114,7 +120,7 @@ echo
 info "=== Step 5: Removing rp_filter sysctl ==="
 if [[ -f "$SYSCTL_FILE" ]]; then
     run rm -f "$SYSCTL_FILE"
-    $DRY_RUN || sysctl --system > /dev/null
+    $DRY_RUN || sysctl --system >/dev/null
     info "Removed $SYSCTL_FILE"
 else
     info "Not found — skipping"
@@ -145,7 +151,7 @@ echo
 # ── 8. e1000e-fix service ─────────────────────────────────────────────────────
 info "=== Step 8: Removing e1000e-fix.service ==="
 if [[ -f "$E1000E_SERVICE" ]]; then
-    systemctl is-active  e1000e-fix.service &>/dev/null && run systemctl stop    e1000e-fix.service
+    systemctl is-active e1000e-fix.service &>/dev/null && run systemctl stop e1000e-fix.service
     systemctl is-enabled e1000e-fix.service &>/dev/null && run systemctl disable e1000e-fix.service
     run rm -f "$E1000E_SERVICE"
     run systemctl daemon-reload

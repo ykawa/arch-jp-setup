@@ -18,7 +18,10 @@
 set -euo pipefail
 
 # ── helpers ─────────────────────────────────────────────────────────────────
-die() { echo "ERROR: $*" >&2; exit 1; }
+die() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
 info() { echo "[br0-setup] $*"; }
 
 [[ $EUID -eq 0 ]] || die "Run as root (sudo $0)"
@@ -96,7 +99,7 @@ fi
 # ── rp_filter ───────────────────────────────────────────────────────────────
 SYSCTL_FILE="/etc/sysctl.d/99-libvirt-br0.conf"
 info "Writing $SYSCTL_FILE (rp_filter)"
-tee "$SYSCTL_FILE" > /dev/null <<EOF
+tee "$SYSCTL_FILE" >/dev/null <<EOF
 # rp_filter for libvirt br0 bridge
 net.ipv4.conf.${ETH_IFACE}.rp_filter = 0
 net.ipv4.conf.br0.rp_filter = 1
@@ -110,7 +113,7 @@ NM_CONF="/etc/NetworkManager/conf.d/90-libvirt-unmanaged.conf"
 if [[ ! -f "$NM_CONF" ]]; then
     info "Writing $NM_CONF (vnet* unmanaged)"
     mkdir -p /etc/NetworkManager/conf.d
-    tee "$NM_CONF" > /dev/null <<'NMEOF'
+    tee "$NM_CONF" >/dev/null <<'NMEOF'
 [keyfile]
 unmanaged-devices=interface-name:vnet*;interface-name:tap*
 NMEOF
@@ -121,7 +124,7 @@ fi
 QEMU_BRIDGE="/etc/qemu/bridge.conf"
 if ! grep -q "^allow br0$" "$QEMU_BRIDGE" 2>/dev/null; then
     info "Adding 'allow br0' to $QEMU_BRIDGE"
-    echo "allow br0" >> "$QEMU_BRIDGE"
+    echo "allow br0" >>"$QEMU_BRIDGE"
 fi
 
 # ── e1000e TSO fix ───────────────────────────────────────────────────────────
@@ -131,7 +134,7 @@ E1000E_SERVICE="/etc/systemd/system/e1000e-fix.service"
 ETH_DRIVER=$(readlink "/sys/class/net/${ETH_IFACE}/device/driver" 2>/dev/null | xargs basename 2>/dev/null || true)
 if [[ "$ETH_DRIVER" == "e1000e" ]]; then
     info "e1000e detected on $ETH_IFACE — creating TSO fix service"
-    tee "$E1000E_SERVICE" > /dev/null <<EOF
+    tee "$E1000E_SERVICE" >/dev/null <<EOF
 [Unit]
 Description=Disable TSO/GSO on ${ETH_IFACE} (e1000e Hardware Unit Hang fix)
 After=network.target

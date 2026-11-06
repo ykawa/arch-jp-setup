@@ -120,7 +120,7 @@ echo ""
 echo "=== rp_filter (sysctl) ==="
 SYSCTL_FILE="/etc/sysctl.d/99-libvirt-br0.conf"
 if [[ -n "$ETH_IFACE" ]]; then
-    sudo tee "$SYSCTL_FILE" > /dev/null <<EOF
+    sudo tee "$SYSCTL_FILE" >/dev/null <<EOF
 # rp_filter for libvirt br0 bridge
 net.ipv4.conf.${ETH_IFACE}.rp_filter = 0
 net.ipv4.conf.br0.rp_filter = 1
@@ -141,7 +141,7 @@ if [[ -f "$NM_CONF" ]]; then
     echo "Already exists: $NM_CONF — skipping"
 else
     sudo mkdir -p /etc/NetworkManager/conf.d
-    sudo tee "$NM_CONF" > /dev/null <<'EOF'
+    sudo tee "$NM_CONF" >/dev/null <<'EOF'
 [keyfile]
 unmanaged-devices=interface-name:vnet*;interface-name:tap*
 EOF
@@ -157,7 +157,7 @@ if grep -q "^allow br0$" "$QEMU_BRIDGE" 2>/dev/null; then
     echo "Already present: 'allow br0' in $QEMU_BRIDGE"
 else
     sudo mkdir -p /etc/qemu
-    echo "allow br0" | sudo tee -a "$QEMU_BRIDGE" > /dev/null
+    echo "allow br0" | sudo tee -a "$QEMU_BRIDGE" >/dev/null
     echo "Added 'allow br0' to $QEMU_BRIDGE"
 fi
 echo ""
@@ -180,7 +180,7 @@ if [[ "$ETH_DRIVER" == "e1000e" ]]; then
         echo "e1000e-fix.service already exists — skipping"
     else
         echo "e1000e detected on $ETH_IFACE — creating TSO fix service..."
-        sudo tee "$E1000E_SERVICE" > /dev/null <<EOF
+        sudo tee "$E1000E_SERVICE" >/dev/null <<EOF
 [Unit]
 Description=Disable TSO/GSO on ${ETH_IFACE} (e1000e Hardware Unit Hang fix)
 After=network.target

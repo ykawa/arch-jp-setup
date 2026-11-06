@@ -13,10 +13,10 @@ echo "================================"
 echo ""
 
 # Check for download tools
-if command -v curl &> /dev/null; then
+if command -v curl &>/dev/null; then
     DOWNLOADER="curl -fsSL"
     echo "Using curl for download..."
-elif command -v wget &> /dev/null; then
+elif command -v wget &>/dev/null; then
     DOWNLOADER="wget -qO-"
     echo "Using wget for download..."
 else

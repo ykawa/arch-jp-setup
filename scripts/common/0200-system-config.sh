@@ -25,11 +25,11 @@ echo ""
 echo "Renaming Japanese directories to English..."
 
 mkdir -p "$HOME/.config"
-cat > "$HOME/.config/user-dirs.conf" << 'EOF'
+cat >"$HOME/.config/user-dirs.conf" <<'EOF'
 enabled=False
 EOF
 
-cat > "$HOME/.config/user-dirs.dirs" << 'EOF'
+cat >"$HOME/.config/user-dirs.dirs" <<'EOF'
 XDG_DESKTOP_DIR="$HOME/Desktop"
 XDG_DOWNLOAD_DIR="$HOME/Downloads"
 XDG_TEMPLATES_DIR="$HOME/Templates"
@@ -52,7 +52,7 @@ EOF
 # xdg-user-dirs 0.20 以降で追加された PROJECTS
 [ -d "$HOME/プロジェクト" ] && mv "$HOME/プロジェクト" "$HOME/Projects" 2>/dev/null || true
 
-cat > "$HOME/.config/user-dirs.locale" << 'EOF'
+cat >"$HOME/.config/user-dirs.locale" <<'EOF'
 ja_JP
 EOF
 
@@ -63,19 +63,19 @@ echo ""
 echo "Configuring autologin for tty3-5..."
 sudo mkdir -p /etc/systemd/system/getty@tty{3,4,5}.service.d
 
-cat << EOF | sudo tee /etc/systemd/system/getty@tty3.service.d/override.conf
+cat <<EOF | sudo tee /etc/systemd/system/getty@tty3.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I \$TERM
 EOF
 
-cat << EOF | sudo tee /etc/systemd/system/getty@tty4.service.d/override.conf
+cat <<EOF | sudo tee /etc/systemd/system/getty@tty4.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I \$TERM
 EOF
 
-cat << EOF | sudo tee /etc/systemd/system/getty@tty5.service.d/override.conf
+cat <<EOF | sudo tee /etc/systemd/system/getty@tty5.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $USER --noclear %I \$TERM

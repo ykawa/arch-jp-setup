@@ -27,13 +27,13 @@ detect_desktop_environment() {
 
     # Method 2: Check running processes if XDG_CURRENT_DESKTOP is not set
     if [ -z "$desktop_env" ]; then
-        if pgrep -x "gnome-shell" > /dev/null; then
+        if pgrep -x "gnome-shell" >/dev/null; then
             desktop_env="gnome"
-        elif pgrep -x "cosmic-comp" > /dev/null || pgrep -x "cosmic-panel" > /dev/null; then
+        elif pgrep -x "cosmic-comp" >/dev/null || pgrep -x "cosmic-panel" >/dev/null; then
             desktop_env="cosmic"
-        elif pgrep -x "cinnamon" > /dev/null; then
+        elif pgrep -x "cinnamon" >/dev/null; then
             desktop_env="cinnamon"
-        elif pgrep -x "niri" > /dev/null; then
+        elif pgrep -x "niri" >/dev/null; then
             desktop_env="niri"
         fi
     fi
