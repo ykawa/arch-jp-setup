@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>niri Cheatsheet</title>
+<style>
+  @page { size: A4 landscape; margin: 8mm 9mm 7mm; }
+  :root {
+    --accent: #1f5fbf;
+    --accent-soft: #e8f0fc;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --rule: #d4d4d4;
+    --kbd-bg: #f3f3f3;
+    --kbd-border: #b9b9b9;
+    --prefix: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body {
+    font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.36;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 1.6mm; margin-bottom: 2.4mm;
+  }
+  h1 { font-size: 15pt; margin: 0; letter-spacing: .02em; }
+  h1 span { color: var(--accent); }
+  .legend { font-size: 7pt; color: var(--muted); display: flex; gap: 4mm; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .legend .dot { display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: 50%; vertical-align: -0.3mm; margin-right: 1mm; }
+  .cols { column-count: 4; column-gap: 4mm; column-fill: balance; }
+  section { break-inside: avoid; margin: 0 0 2.6mm; }
+  h2 {
+    font-size: 8.4pt; margin: 0 0 1mm; padding: 0.7mm 1.6mm;
+    background: var(--accent); color: #fff; border-radius: 1mm;
+    letter-spacing: .03em;
+  }
+  h2 small { font-weight: normal; opacity: .85; font-size: 6.8pt; margin-left: 1.2mm; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 0.55mm 0.6mm; vertical-align: top; border-bottom: 0.2mm solid var(--rule); }
+  tr:last-child td { border-bottom: none; }
+  td.k { white-space: nowrap; width: 1%; padding-right: 1.6mm; }
+  tr.custom td.d::after {
+    content: "★"; color: var(--accent); font-size: 6pt; margin-left: 0.8mm; vertical-align: 0.4mm;
+  }
+  kbd {
+    font-family: "Cica", "DejaVu Sans Mono", monospace;
+    font-size: 7.6pt;
+    background: var(--kbd-bg);
+    border: 0.25mm solid var(--kbd-border);
+    border-bottom-width: 0.5mm;
+    border-radius: 0.8mm;
+    padding: 0 0.9mm;
+    display: inline-block;
+    line-height: 1.35;
+  }
+  kbd.p { background: #fbeae8; border-color: #e3a49d; color: var(--prefix); font-weight: bold; }
+  .plus { color: var(--muted); margin: 0 0.3mm; font-size: 6.5pt; }
+  code {
+    font-family: "Cica", "DejaVu Sans Mono", monospace;
+    font-size: 7.6pt;
+  }
+  .note {
+    font-size: 6.8pt; color: var(--muted); margin: 0.8mm 0 0; padding-left: 0.6mm;
+  }
+  .box {
+    background: var(--accent-soft); border-left: 1mm solid var(--accent);
+    padding: 1.2mm 1.6mm; border-radius: 0.8mm; font-size: 7.2pt;
+  }
+  .box p { margin: 0 0 0.6mm; }
+  .box p:last-child { margin: 0; }
+  .cli td { display: block; border: none; padding: 0 0.6mm; }
+  .cli tr { display: block; border-bottom: 0.2mm solid var(--rule); padding: 0.4mm 0; }
+  .cli tr:last-child { border-bottom: none; }
+  .cli td.k { width: auto; }
+  .cli td.k code { color: var(--accent); }
+  .cli td.d { padding-left: 3mm; color: #333; }
+
+  .cols { column-count: 3; column-gap: 5mm; }
+  body { font-size: 8pt; line-height: 1.26; }
+  kbd, code { font-size: 7.1pt; }
+  td { padding: 0.3mm 0.5mm; }
+  section { margin: 0 0 1.7mm; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>niri</span> チートシート <small style="font-size:8pt;color:var(--muted);font-weight:normal">cfg/keybinds.kdl 準拠</small></h1>
+  <div class="legend">
+    <span><kbd>Win</kbd> = Super（Windows）キー</span>
+    <span>niri 26.04</span>
+  </div>
+</header>
+
+<div class="cols">
+
+<section>
+  <h2>基本の考え方</h2>
+  <div class="box">
+    <p><b>Win</b> は Super（Windows）キー。TTY で動く niri の Mod です。</p>
+    <p>ここにあるキーは niri が先に受け取り、アプリには届きません。</p>
+    <p>一覧は <kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>/</kbd>。設定の再読込は <code>niri msg action load-config-file</code>。</p>
+  </div>
+</section>
+
+<section>
+  <h2>アプリケーション</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>T</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td class="d">主ターミナル（セットアップで選択）</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td class="d">副ターミナル</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>D</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Space</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Enter</kbd></td><td class="d">ランチャー（Noctalia）</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>B</kbd></td><td class="d">ブラウザ（セットアップで選択）</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>E</kbd></td><td class="d">ファイラー（セットアップで選択）</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>N</kbd></td><td class="d">Neovim</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>A</kbd></td><td class="d">Claude Code（~/Work で起動）</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>H</kbd></td><td class="d">クリップボード履歴（Noctalia）</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>L</kbd></td><td class="d">画面ロック（Noctalia）</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ウィンドウ操作</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Q</kbd> / <kbd>Alt</kbd><span class="plus">+</span><kbd>F4</kbd></td><td class="d">ウィンドウを閉じる</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>F</kbd></td><td class="d">カラムを最大化</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F</kbd></td><td class="d">フルスクリーン</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F</kbd></td><td class="d">カラムを空き幅いっぱいに広げる</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>V</kbd></td><td class="d">フローティング切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></td><td class="d">フローティング / タイルのフォーカス切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>W</kbd></td><td class="d">カラムのタブ表示切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>O</kbd></td><td class="d">オーバービュー</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>C</kbd></td><td class="d">カラムを中央に</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></td><td class="d">表示中のカラムを中央に</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>フォーカス移動</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>←</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>H</kbd></td><td class="d">左のカラムへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>→</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>L</kbd></td><td class="d">右のカラムへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>↑</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>K</kbd></td><td class="d">上のウィンドウへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>↓</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>J</kbd></td><td class="d">下のウィンドウへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Home</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>End</kbd></td><td class="d">最初 / 最後のカラムへ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ウィンドウ・カラム移動</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>H</kbd></td><td class="d">カラムを左へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>→</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>L</kbd></td><td class="d">カラムを右へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↑</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>K</kbd></td><td class="d">ウィンドウを上へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↓</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>J</kbd></td><td class="d">ウィンドウを下へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Home</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>End</kbd></td><td class="d">カラムを最初 / 最後へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>,</kbd></td><td class="d">ウィンドウをカラムに取り込む</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>.</kbd></td><td class="d">ウィンドウをカラムから出す</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>[</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>]</kbd></td><td class="d">左 / 右へ取り込む・出す</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>モニター</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></td><td class="d">モニターへフォーカス</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd></td><td class="d">同上</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></td><td class="d">カラムをモニターへ移動</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd></td><td class="d">同上</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ワークスペース</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>1〜9</kbd></td><td class="d">ワークスペース 1〜9 へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>1〜9</kbd></td><td class="d">カラムをワークスペース 1〜9 へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>PgDn</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>U</kbd></td><td class="d">次のワークスペースへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>PgUp</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>I</kbd></td><td class="d">前のワークスペースへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgDn</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>U</kbd></td><td class="d">カラムを次へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgUp</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>I</kbd></td><td class="d">カラムを前へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>PgDn</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>U</kbd></td><td class="d">ワークスペースを下へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>PgUp</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>I</kbd></td><td class="d">ワークスペースを上へ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Tab</kbd></td><td class="d">直前のワークスペースへ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>レイアウト調整</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>R</kbd></td><td class="d">カラム幅のプリセット切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>R</kbd></td><td class="d">ウィンドウ高さのプリセット切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>R</kbd></td><td class="d">ウィンドウ高さをリセット</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>;</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>:</kbd></td><td class="d">カラム幅 -10% / +10%</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>;</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>:</kbd></td><td class="d">ウィンドウ高さ -10% / +10%</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>マウスホイール</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Wheel↑↓</kbd></td><td class="d">ワークスペース切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Wheel←→</kbd></td><td class="d">カラム切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Wheel↑↓</kbd></td><td class="d">カラム切替</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Wheel↑↓</kbd></td><td class="d">カラムを別ワークスペースへ</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Wheel←→</kbd></td><td class="d">カラムを移動</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Wheel↑↓</kbd></td><td class="d">カラムを移動</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>スクリーンショット</h2>
+  <table>
+    <tr><td class="k"><kbd>Print</kbd> / <kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>1</kbd></td><td class="d">範囲を選択</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Print</kbd> / <kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>2</kbd></td><td class="d">画面全体</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>Print</kbd> / <kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>3</kbd></td><td class="d">ウィンドウ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>音量・メディア・輝度 <small>Noctalia 経由・ロック中も有効</small></h2>
+  <table>
+    <tr><td class="k"><kbd>音量↑</kbd> / <kbd>音量↓</kbd></td><td class="d">音量を上げる / 下げる</td></tr>
+    <tr><td class="k"><kbd>ミュート</kbd> / <kbd>マイクミュート</kbd></td><td class="d">出力 / マイクのミュート</td></tr>
+    <tr><td class="k"><kbd>前の曲</kbd> / <kbd>次の曲</kbd> / <kbd>再生</kbd></td><td class="d">メディア操作</td></tr>
+    <tr><td class="k"><kbd>輝度↑</kbd> / <kbd>輝度↓</kbd></td><td class="d">画面の明るさ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>セッション・システム</h2>
+  <table>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Q</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Esc</kbd></td><td class="d">セッションメニュー（Noctalia）</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>P</kbd></td><td class="d">モニターの電源を切る</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>E</kbd></td><td class="d">ショートカット抑制の解除（緊急用）</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>Delete</kbd></td><td class="d">niri を終了</td></tr>
+    <tr><td class="k"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>/</kbd> / <kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Esc</kbd></td><td class="d">ホットキー一覧</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>
