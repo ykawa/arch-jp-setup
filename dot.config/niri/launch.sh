@@ -43,10 +43,22 @@ class=""
 bare=false
 while [ $# -gt 0 ]; do
     case "$1" in
-        -d) dir="$2"; shift 2 ;;
-        --class) class="$2"; shift 2 ;;
-        --bare) bare=true; shift ;;
-        --) shift; break ;;
+        -d)
+            dir="$2"
+            shift 2
+            ;;
+        --class)
+            class="$2"
+            shift 2
+            ;;
+        --bare)
+            bare=true
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
         *) break ;;
     esac
 done

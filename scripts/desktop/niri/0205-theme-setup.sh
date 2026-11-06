@@ -19,8 +19,8 @@ echo ""
 # ── 設定ファイルのリンク ───────────────────────────────────
 
 echo "[1/2] Linking config files..."
-link_dotconfig "gtk-3.0"    "$REPO_ROOT"
-link_dotconfig "gtk-4.0"    "$REPO_ROOT"
+link_dotconfig "gtk-3.0" "$REPO_ROOT"
+link_dotconfig "gtk-4.0" "$REPO_ROOT"
 
 echo ""
 
@@ -32,15 +32,15 @@ echo "[2/2] Applying gsettings..."
 GTK_THEME_NAME=$(theme_value gtk)
 ICON_THEME_NAME=$(theme_value icon)
 CURSOR_THEME_NAME=$(theme_value cursor)
-gsettings set org.gnome.desktop.interface gtk-theme           "$GTK_THEME_NAME"
-gsettings set org.gnome.desktop.interface icon-theme          "$ICON_THEME_NAME"
-gsettings set org.gnome.desktop.interface cursor-theme        "$CURSOR_THEME_NAME"
-gsettings set org.gnome.desktop.interface cursor-size         24
-gsettings set org.gnome.desktop.interface font-name           'Meiryo UI 11'
-gsettings set org.gnome.desktop.interface document-font-name  'Meiryo UI 11'
+gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME_NAME"
+gsettings set org.gnome.desktop.interface icon-theme "$ICON_THEME_NAME"
+gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR_THEME_NAME"
+gsettings set org.gnome.desktop.interface cursor-size 24
+gsettings set org.gnome.desktop.interface font-name 'Meiryo UI 11'
+gsettings set org.gnome.desktop.interface document-font-name 'Meiryo UI 11'
 gsettings set org.gnome.desktop.interface monospace-font-name '源ノ角ゴシック Code JP 12'
-gsettings set org.gnome.desktop.interface color-scheme        'prefer-dark'
-gsettings set org.gnome.desktop.interface enable-animations   true
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface enable-animations true
 
 echo ""
 echo "================================"

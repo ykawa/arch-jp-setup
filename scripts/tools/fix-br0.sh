@@ -23,15 +23,21 @@ UNDO=false
 for arg in "$@"; do
     case "$arg" in
         --dry-run) DRY_RUN=true ;;
-        --undo)    UNDO=true ;;
-        *) echo "Unknown argument: $arg" >&2; exit 1 ;;
+        --undo) UNDO=true ;;
+        *)
+            echo "Unknown argument: $arg" >&2
+            exit 1
+            ;;
     esac
 done
 
 # ── helpers ──────────────────────────────────────────────────────────────────
-die()  { echo "ERROR: $*" >&2; exit 1; }
+die() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
 info() { echo "[fix-br0] $*"; }
-run()  { $DRY_RUN && echo "  [DRY RUN] $*" || "$@"; }
+run() { $DRY_RUN && echo "  [DRY RUN] $*" || "$@"; }
 
 [[ $EUID -eq 0 ]] || die "Run as root (sudo $0)"
 
@@ -68,7 +74,7 @@ if $UNDO; then
     E1000E_SERVICE="/etc/systemd/system/e1000e-fix.service"
     if [[ -f "$E1000E_SERVICE" ]]; then
         systemctl is-enabled e1000e-fix.service &>/dev/null && run systemctl disable e1000e-fix.service
-        systemctl is-active  e1000e-fix.service &>/dev/null && run systemctl stop    e1000e-fix.service
+        systemctl is-active e1000e-fix.service &>/dev/null && run systemctl stop e1000e-fix.service
         run rm -f "$E1000E_SERVICE"
         run systemctl daemon-reload
         info "Removed $E1000E_SERVICE"
@@ -98,7 +104,7 @@ info "=== Fix 1: rp_filter ==="
 info "Problem : rp_filter=2 (strict) drops bridged packets under heavy VM traffic."
 info "          Bridge members have no IP, so reverse-path checks are meaningless."
 CUR_ETH=$(sysctl -n "net.ipv4.conf.${ETH_IFACE}.rp_filter" 2>/dev/null || echo "?")
-CUR_BR=$(sysctl  -n "net.ipv4.conf.${BR_IFACE}.rp_filter"  2>/dev/null || echo "?")
+CUR_BR=$(sysctl -n "net.ipv4.conf.${BR_IFACE}.rp_filter" 2>/dev/null || echo "?")
 info "Current : ${ETH_IFACE}=${CUR_ETH}  ${BR_IFACE}=${CUR_BR}"
 info "Target  : ${ETH_IFACE}=0  ${BR_IFACE}=1"
 echo
@@ -106,7 +112,7 @@ echo
 if $DRY_RUN; then
     echo "  [DRY RUN] write $SYSCTL_FILE"
 else
-    tee "$SYSCTL_FILE" > /dev/null <<EOF
+    tee "$SYSCTL_FILE" >/dev/null <<EOF
 # rp_filter for libvirt br0 bridge
 net.ipv4.conf.${ETH_IFACE}.rp_filter = 0
 net.ipv4.conf.${BR_IFACE}.rp_filter = 1
@@ -134,7 +140,10 @@ else
     info "Applying (brief network interruption) ..."
     run nmcli connection modify "$BR_IFACE" ethernet.cloned-mac-address "$ETH_MAC"
     run nmcli connection up br0
-    $DRY_RUN || { sleep 2; info "New br0 MAC: $(cat /sys/class/net/br0/address)"; }
+    $DRY_RUN || {
+        sleep 2
+        info "New br0 MAC: $(cat /sys/class/net/br0/address)"
+    }
 fi
 echo
 
@@ -156,7 +165,7 @@ elif $DRY_RUN; then
     echo "  [DRY RUN] systemctl reload NetworkManager"
 else
     mkdir -p /etc/NetworkManager/conf.d
-    tee "$NM_CONF" > /dev/null <<'EOF'
+    tee "$NM_CONF" >/dev/null <<'EOF'
 # Prevent NetworkManager from managing libvirt/qemu tap interfaces.
 # Without this, NM runs DHCP on vnetN and installs a low-metric default
 # route via the guest VM's tap device, breaking the host's internet
@@ -207,7 +216,7 @@ else
         echo "  [DRY RUN] systemctl daemon-reload"
         echo "  [DRY RUN] systemctl enable --now e1000e-fix.service"
     else
-        tee "$E1000E_SERVICE" > /dev/null <<SVCEOF
+        tee "$E1000E_SERVICE" >/dev/null <<SVCEOF
 [Unit]
 Description=Disable TSO/GSO on ${ETH_IFACE} (e1000e Hardware Unit Hang fix)
 After=network.target
@@ -234,7 +243,7 @@ echo
 if ! $DRY_RUN; then
     info "=== Verification ==="
     sysctl "net.ipv4.conf.${ETH_IFACE}.rp_filter" \
-           "net.ipv4.conf.${BR_IFACE}.rp_filter"
+        "net.ipv4.conf.${BR_IFACE}.rp_filter"
     echo "br0 MAC   : $(cat /sys/class/net/br0/address)"
     echo "br0 IP    : $(ip -4 addr show br0 | awk '/inet /{print $2}')"
     echo "NM conf   : $NM_CONF"

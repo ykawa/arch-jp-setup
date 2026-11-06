@@ -33,9 +33,12 @@ if [ -f "$PRIVATE_WORDS_FILE" ]; then
         [ -n "$word" ] && [ "${word#\#}" = "$word" ] || continue
         # 正規表現として解釈されないようにエスケープする
         patterns+=("$(printf '%s' "$word" | sed 's/[][\.*^$+?(){}|]/\\&/g')")
-    done < "$PRIVATE_WORDS_FILE"
+    done <"$PRIVATE_WORDS_FILE"
 fi
-pattern=$(IFS='|'; echo "${patterns[*]}")
+pattern=$(
+    IFS='|'
+    echo "${patterns[*]}"
+)
 
 read_content() {
     if $staged; then
@@ -57,7 +60,7 @@ for file in "$@"; do
         found=1
         while IFS= read -r line; do
             echo "$file:$line"
-        done <<< "$hits"
+        done <<<"$hits"
     fi
 done
 

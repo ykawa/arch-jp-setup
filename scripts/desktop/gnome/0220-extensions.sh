@@ -5,8 +5,8 @@ set -euo pipefail
 
 echo "Installing extension-manager and python-pipx..."
 yay -S --noconfirm --needed \
-  extension-manager \
-  python-pipx
+    extension-manager \
+    python-pipx
 
 /usr/bin/pipx install gnome-extensions-cli --system-site-packages --force
 

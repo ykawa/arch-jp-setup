@@ -76,7 +76,7 @@ main() {
     log_message "Selection saved to: $GROUP_SELECTION_FILE"
     while read -r group_name group_state; do
         log_message "  [$group_state] $group_name"
-    done < "$GROUP_SELECTION_FILE"
+    done <"$GROUP_SELECTION_FILE"
 
     if ! select_defaults "$SCRIPT_DIR"; then
         log_message "既定の選択がキャンセルされたため中止します"
@@ -84,11 +84,14 @@ main() {
     fi
     while read -r default_kind default_name; do
         log_message "  既定の $default_kind: $default_name"
-    done < "$DEFAULTS_SETTING_FILE"
+    done <"$DEFAULTS_SETTING_FILE"
 
     # PC ごとの設定（INSTALL_DIR のコピーにだけ反映する）
     if [ "$CURRENT_DE" = "niri" ]; then
-        select_avatar_source || { log_message "Avatar selection cancelled. Aborting setup."; exit 1; }
+        select_avatar_source || {
+            log_message "Avatar selection cancelled. Aborting setup."
+            exit 1
+        }
         log_message "Noctalia avatar: $(cat "$AVATAR_SETTING_FILE")"
     fi
 

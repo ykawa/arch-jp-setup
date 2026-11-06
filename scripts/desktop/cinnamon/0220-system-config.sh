@@ -59,7 +59,7 @@ if [ -f "$NEMO_BOOKMARKS" ]; then
 else
     echo "Nemo bookmarks file not found, creating with English directories..."
     mkdir -p "$(dirname "$NEMO_BOOKMARKS")"
-    cat > "$NEMO_BOOKMARKS" << EOF
+    cat >"$NEMO_BOOKMARKS" <<EOF
 file://$HOME/Desktop Desktop
 file://$HOME/Downloads Downloads
 file://$HOME/Documents Documents
@@ -88,12 +88,12 @@ if command -v gsettings >/dev/null 2>&1; then
 
     # Remove any applet entry that contains 'workspace-switcher@cinnamon.org'
     # Handle multiple removal patterns and clean up commas
-    new=$(echo "$enabled" | \
-        sed "s/'[^']*workspace-switcher@cinnamon.org[^']*',\?//g" | \
-        sed "s/,\s*,/,/g" | \
-        sed "s/\[\s*,/[/g" | \
-        sed "s/,\s*]/]/g" | \
-        sed "s/,\s*\]/]/g")
+    new=$(echo "$enabled" \
+        | sed "s/'[^']*workspace-switcher@cinnamon.org[^']*',\?//g" \
+        | sed "s/,\s*,/,/g" \
+        | sed "s/\[\s*,/[/g" \
+        | sed "s/,\s*]/]/g" \
+        | sed "s/,\s*\]/]/g")
 
     echo "Updated applets: $new"
     gsettings set org.cinnamon enabled-applets "$new"
@@ -102,7 +102,7 @@ if command -v gsettings >/dev/null 2>&1; then
     echo "Configuring panel applications..."
 
     # Check if jq is available
-    if ! command -v jq &> /dev/null; then
+    if ! command -v jq &>/dev/null; then
         echo "Warning: jq is required for panel configuration but not installed"
         echo "Skipping panel application configuration"
     else
@@ -147,12 +147,12 @@ if command -v gsettings >/dev/null 2>&1; then
                     echo "Panel applications already configured correctly"
                 else
                     echo "Updating panel applications configuration..."
-                    echo "$desired_config" | jq '.' > "$conf"
+                    echo "$desired_config" | jq '.' >"$conf"
                     echo "Panel applications configured successfully"
                 fi
             else
                 echo "Creating panel applications configuration..."
-                echo "$desired_config" | jq '.' > "$conf"
+                echo "$desired_config" | jq '.' >"$conf"
                 echo "Panel applications configured successfully"
             fi
         else

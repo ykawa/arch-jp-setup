@@ -38,7 +38,7 @@ echo "Removed legacy IM settings from $ENV_FILE"
 # systemd environment.d に設定
 ENVD_DIR="$HOME/.config/environment.d"
 mkdir -p "$ENVD_DIR"
-cat > "$ENVD_DIR/fcitx5.conf" << 'EOF'
+cat >"$ENVD_DIR/fcitx5.conf" <<'EOF'
 # fcitx5 input method environment variables
 # XMODIFIERS: XWayland・レガシーX11アプリ向け
 XMODIFIERS=@im=fcitx
@@ -55,7 +55,7 @@ CONFIG_DIR="$HOME/.config/fcitx5"
 mkdir -p "$CONFIG_DIR/conf"
 
 # profile設定
-cat > "$CONFIG_DIR/profile" << 'EOF'
+cat >"$CONFIG_DIR/profile" <<'EOF'
 [Groups/0]
 Name=デフォルト
 Default Layout=jp
@@ -70,7 +70,7 @@ Layout=
 EOF
 
 # config設定
-cat > "$CONFIG_DIR/config" << 'EOF'
+cat >"$CONFIG_DIR/config" <<'EOF'
 [Hotkey]
 TriggerKeys=
 EnumerateWithTriggerKeys=False
@@ -109,7 +109,7 @@ AutoSavePeriod=30
 EOF
 
 # mozc.conf設定
-cat > "$CONFIG_DIR/conf/mozc.conf" << 'EOF'
+cat >"$CONFIG_DIR/conf/mozc.conf" <<'EOF'
 InitialMode=Direct
 InputState=All
 Vertical=True
@@ -119,7 +119,7 @@ ExpandKey=
 EOF
 
 # xim.conf設定
-cat > "$CONFIG_DIR/conf/xim.conf" << 'EOF'
+cat >"$CONFIG_DIR/conf/xim.conf" <<'EOF'
 UseOnTheSpot=True
 EOF
 
@@ -154,7 +154,7 @@ if [ -f "/etc/xdg/autostart/org.fcitx.Fcitx5.desktop" ]; then
 else
     AUTOSTART_DIR="$HOME/.config/autostart"
     mkdir -p "$AUTOSTART_DIR"
-    cat > "$AUTOSTART_DIR/org.fcitx.Fcitx5.desktop" << 'EOF'
+    cat >"$AUTOSTART_DIR/org.fcitx.Fcitx5.desktop" <<'EOF'
 [Desktop Entry]
 Name[ca]=Fcitx 5
 Name[da]=Fcitx 5
@@ -239,7 +239,7 @@ link_dotconfig "typora" "$REPO_ROOT"
 
 # Slack（~/.config/slack/ には他のアプリ生成ファイルも混在するため個別ファイル生成）
 mkdir -p "$HOME/.config/slack"
-cat > "$HOME/.config/slack/command-line-flags" << 'EOF'
+cat >"$HOME/.config/slack/command-line-flags" <<'EOF'
 --ozone-platform-hint=auto
 --enable-wayland-ime
 EOF

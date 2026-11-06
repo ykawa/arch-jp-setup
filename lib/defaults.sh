@@ -77,7 +77,7 @@ select_defaults() {
         candidates=()
         labels=()
         for line in "${provided[@]}"; do
-            read -r entry_kind value pkg desktop <<< "$line"
+            read -r entry_kind value pkg desktop <<<"$line"
             [ "$entry_kind" = "$source_kind" ] || continue
             candidates+=("$value")
             labels+=("$value（$pkg）")
@@ -96,7 +96,10 @@ select_defaults() {
                 # 副ターミナルの初期値は主ターミナル以外の先頭
                 if [ "$kind" = "terminal2" ]; then
                     for value in "${candidates[@]}"; do
-                        [ "$value" != "${chosen[terminal]}" ] && { chosen[$kind]="$value"; break; }
+                        [ "$value" != "${chosen[terminal]}" ] && {
+                            chosen[$kind]="$value"
+                            break
+                        }
                     done
                 fi
                 for value in "${candidates[@]}"; do
@@ -118,10 +121,10 @@ select_defaults() {
     done
 
     mkdir -p "$(dirname "$DEFAULTS_SETTING_FILE")"
-    : > "$DEFAULTS_SETTING_FILE"
+    : >"$DEFAULTS_SETTING_FILE"
     for kind in "${DEFAULT_KINDS[@]}"; do
         [ -n "${chosen[$kind]}" ] || continue
-        echo "$kind ${chosen[$kind]}" >> "$DEFAULTS_SETTING_FILE"
+        echo "$kind ${chosen[$kind]}" >>"$DEFAULTS_SETTING_FILE"
     done
 }
 

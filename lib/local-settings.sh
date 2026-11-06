@@ -29,7 +29,7 @@ _can_prompt() {
 
 _write_setting() {
     mkdir -p "$LOCAL_SETTINGS_DIR"
-    echo "$2" > "$1"
+    echo "$2" >"$1"
 }
 
 _read_setting() {
@@ -85,7 +85,6 @@ select_avatar_source() {
     esac
 }
 
-
 # 保存した取得元から INSTALL_DIR/images/avatar.png を用意する（失敗しても止めない）
 fetch_avatar_image() {
     local install_dir="$1" saved kind value dest
@@ -125,7 +124,7 @@ apply_zed_file_scan_inclusions() {
     saved=$(_read_setting "$ZED_INCLUSIONS_SETTING_FILE")
 
     json=""
-    IFS=',' read -ra items <<< "$saved"
+    IFS=',' read -ra items <<<"$saved"
     for item in "${items[@]}"; do
         item="$(echo "$item" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
         [ -n "$item" ] || continue
@@ -137,7 +136,6 @@ apply_zed_file_scan_inclusions() {
     json="${json//&/\\&}"
     sed -i "s|^\([[:space:]]*\"file_scan_inclusions\":\).*|\1 [${json}],|" "$settings"
 }
-
 
 # INSTALL_DIR のコピーにある dot.config/git/ignore のマーカー間を保存したパターンで置き換える
 apply_git_ignore_local() {
@@ -156,7 +154,7 @@ apply_git_ignore_local() {
         }
         $0 == end { skip = 0 }
         !skip { print }
-    ' "$ignore_file" > "$ignore_file.tmp"
+    ' "$ignore_file" >"$ignore_file.tmp"
     mv "$ignore_file.tmp" "$ignore_file"
 }
 

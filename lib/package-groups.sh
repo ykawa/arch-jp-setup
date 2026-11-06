@@ -94,7 +94,7 @@ tui_available() {
 select_groups() {
     local repo_root="$1"
     local -a scripts labels preselected chosen lines
-    local script id label state selected line selected_csv output
+    local script id label state selected line selected_csv output key
     local -A group_on item_on
 
     mapfile -t scripts < <(list_group_scripts "$repo_root")
@@ -114,14 +114,17 @@ select_groups() {
     done
 
     if tui_available; then
-        selected_csv=$(IFS=,; echo "${preselected[*]}")
+        selected_csv=$(
+            IFS=,
+            echo "${preselected[*]}"
+        )
         # curl | bash 経由では標準入力がパイプなので、端末は /dev/tty から読む
         output=$(gum choose --no-limit \
             --height 30 \
             --header "インストールするグループを選択（tab または x: 切替 / ctrl+a: 全選択 / enter: 決定）" \
             --selected "$selected_csv" \
             "${labels[@]}" </dev/tty) || return 1
-        mapfile -t chosen <<< "$output"
+        mapfile -t chosen <<<"$output"
     else
         echo "TUI を表示できないため、保存済みの選択（なければ既定値）を使います"
         chosen=("${preselected[@]}")
@@ -145,17 +148,21 @@ select_groups() {
         local -a displays=() item_preselected=() item_chosen=()
         for line in "${lines[@]}"; do
             displays+=("$(item_display "$line")")
-            if [ "${item_on[$id:${line%% *}]}" = "on" ]; then
+            key="$id:${line%% *}"
+            if [ "${item_on[$key]}" = "on" ]; then
                 item_preselected+=("$(item_display "$line")")
             fi
         done
-        selected_csv=$(IFS=,; echo "${item_preselected[*]}")
+        selected_csv=$(
+            IFS=,
+            echo "${item_preselected[*]}"
+        )
         output=$(gum choose --no-limit \
             --height 30 \
             --header "${label}: 入れるものを選択（tab または x: 切替 / enter: 決定）" \
             --selected "$selected_csv" \
             "${displays[@]}" </dev/tty) || return 1
-        mapfile -t item_chosen <<< "$output"
+        mapfile -t item_chosen <<<"$output"
         for line in "${lines[@]}"; do
             item_on["$id:${line%% *}"]="off"
             for selected in "${item_chosen[@]}"; do
@@ -168,13 +175,14 @@ select_groups() {
     done
 
     mkdir -p "$(dirname "$GROUP_SELECTION_FILE")"
-    : > "$GROUP_SELECTION_FILE"
+    : >"$GROUP_SELECTION_FILE"
     for script in "${scripts[@]}"; do
         id=$(group_id "$script")
-        echo "$id ${group_on[$id]}" >> "$GROUP_SELECTION_FILE"
+        echo "$id ${group_on[$id]}" >>"$GROUP_SELECTION_FILE"
         mapfile -t lines < <(group_items "$script")
         for line in "${lines[@]}"; do
-            echo "$id:${line%% *} ${item_on[$id:${line%% *}]}" >> "$GROUP_SELECTION_FILE"
+            key="$id:${line%% *}"
+            echo "$key ${item_on[$key]}" >>"$GROUP_SELECTION_FILE"
         done
     done
 }
@@ -196,7 +204,7 @@ selected_items() {
         if [ "$(item_state "$script" "$line")" = "on" ]; then
             pkg="${line%% *}"
             echo "$pkg"
-            read -ra bundled <<< "$(sed -n "s/^# @bundle:[[:space:]]*${pkg}[[:space:]]\{1,\}//p" "$script")"
+            read -ra bundled <<<"$(sed -n "s/^# @bundle:[[:space:]]*${pkg}[[:space:]]\{1,\}//p" "$script")"
             printf '%s\n' "${bundled[@]}"
         fi
     done < <(group_items "$script") | awk 'NF && !seen[$0]++'
@@ -221,7 +229,7 @@ install_release_package() {
             "$pkg"-*.pkg.tar.zst) pkg_url="$url" ;;
             SHA256SUMS) sums_url="$url" ;;
         esac
-    done <<< "$urls"
+    done <<<"$urls"
     if [ -z "$pkg_url" ] || [ -z "$sums_url" ]; then
         echo "  $pkg のパッケージか SHA256SUMS がリリースにありません"
         return 1
@@ -229,12 +237,13 @@ install_release_package() {
     dir=$(mktemp -d)
     status=0
     (
-        cd "$dir" &&
-        curl -fsSLO "$pkg_url" &&
-        curl -fsSLO "$sums_url" &&
-        sha256sum --check --ignore-missing SHA256SUMS &&
-        # --ask 4: 衝突するパッケージの削除に同意する
-        sudo pacman -U --needed --noconfirm --ask 4 "./${pkg_url##*/}"
+        cd "$dir" \
+            && curl -fsSLO "$pkg_url" \
+            && curl -fsSLO "$sums_url" \
+            && sha256sum --check --ignore-missing SHA256SUMS \
+            &&
+            # --ask 4: 衝突するパッケージの削除に同意する
+            sudo pacman -U --needed --noconfirm --ask 4 "./${pkg_url##*/}"
     ) || status=1
     rm -rf "$dir"
     return $status

@@ -16,8 +16,8 @@ sleep 2
 
 # Verify service status
 echo "Final service status:"
-if systemctl is-enabled avahi-daemon.service >/dev/null 2>&1 && \
-   systemctl is-active avahi-daemon.service >/dev/null 2>&1; then
+if systemctl is-enabled avahi-daemon.service >/dev/null 2>&1 \
+    && systemctl is-active avahi-daemon.service >/dev/null 2>&1; then
     echo "avahi-daemon.service: enabled and active"
 else
     echo "✗ avahi-daemon.service: configuration issue"
