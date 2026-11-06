@@ -126,7 +126,7 @@
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>o</kbd> / <kbd>;</kbd></td><td class="d">次のペイン / 直前のペイン</td></tr>
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>{</kbd> / <kbd>}</kbd></td><td class="d">ペインを前 / 後ろと入替</td></tr>
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>Space</kbd></td><td class="d">レイアウトを順に切替</td></tr>
-    <tr><td class="k"><kbd class="p">P</kbd> <kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd>〜<kbd>5</kbd></td><td class="d">定型レイアウト（均等横/縦/main…/tiled）</td></tr>
+    <tr><td class="k"><kbd class="p">P</kbd> <kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd>〜<kbd>7</kbd></td><td class="d">定型レイアウト（均等横/縦/main…/tiled/mirrored）</td></tr>
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>!</kbd></td><td class="d">ペインを新ウィンドウへ分離</td></tr>
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>Ctrl</kbd><span class="plus">+</span><kbd>←↑↓→</kbd></td><td class="d">サイズ変更（1 セル）</td></tr>
   </table>
@@ -187,11 +187,24 @@
     <tr><td class="k"><kbd>V</kbd></td><td class="d">行単位で選択</td></tr>
     <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>v</kbd></td><td class="d">矩形選択の切替</td></tr>
     <tr class="custom"><td class="k"><kbd>y</kbd></td><td class="d">コピーして終了（クリップボードにも）</td></tr>
-    <tr><td class="k"><kbd>q</kbd> / <kbd>Esc</kbd></td><td class="d">コピーモードを抜ける</td></tr>
+    <tr><td class="k"><kbd>q</kbd></td><td class="d">コピーモードを抜ける</td></tr>
+    <tr><td class="k"><kbd>Esc</kbd></td><td class="d">選択を解除（モードは続く）</td></tr>
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>]</kbd></td><td class="d">tmux バッファを貼り付け</td></tr>
     <tr><td class="k"><kbd class="p">P</kbd> <kbd>=</kbd></td><td class="d">バッファ一覧から貼り付け</td></tr>
   </table>
   <p class="note">履歴は 50,000 行まで保持。</p>
+</section>
+
+<section>
+  <h2>フローティングペイン <small>tmux 3.8</small></h2>
+  <table>
+    <tr><td class="k"><kbd class="p">P</kbd> <kbd>*</kbd></td><td class="d">新規フローティングペイン</td></tr>
+    <tr><td class="k"><kbd class="p">P</kbd> <kbd>@</kbd></td><td class="d">浮かせる / タイルへ戻す</td></tr>
+    <tr><td class="k"><kbd class="p">P</kbd> <kbd>g</kbd> <kbd>1</kbd>〜<kbd>4</kbd></td><td class="d">四隅へ移動</td></tr>
+    <tr><td class="k"><kbd class="p">P</kbd> <kbd>g</kbd> <kbd>←↑↓→</kbd></td><td class="d">上下左右の端へ移動</td></tr>
+    <tr><td class="k"><kbd class="p">P</kbd> <kbd>Tab</kbd></td><td class="d">ウィンドウ・セッションをあいまい検索</td></tr>
+  </table>
+  <p class="note"><kbd class="p">P</kbd> <kbd>g</kbd> の後に <kbd>Alt</kbd> を付けるとサイズも変わります。</p>
 </section>
 
 <section>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Neovim Cheatsheet</title>
+<style>
+  @page { size: A4 landscape; margin: 8mm 9mm 7mm; }
+  :root {
+    --accent: #1f5fbf;
+    --accent-soft: #e8f0fc;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --rule: #d4d4d4;
+    --kbd-bg: #f3f3f3;
+    --kbd-border: #b9b9b9;
+    --prefix: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body {
+    font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.36;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 1.6mm; margin-bottom: 2.4mm;
+  }
+  h1 { font-size: 15pt; margin: 0; letter-spacing: .02em; }
+  h1 span { color: var(--accent); }
+  .legend { font-size: 7pt; color: var(--muted); display: flex; gap: 4mm; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .legend .dot { display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: 50%; vertical-align: -0.3mm; margin-right: 1mm; }
+  .cols { column-count: 4; column-gap: 4mm; column-fill: balance; }
+  section { break-inside: avoid; margin: 0 0 2.6mm; }
+  h2 {
+    font-size: 8.4pt; margin: 0 0 1mm; padding: 0.7mm 1.6mm;
+    background: var(--accent); color: #fff; border-radius: 1mm;
+    letter-spacing: .03em;
+  }
+  h2 small { font-weight: normal; opacity: .85; font-size: 6.8pt; margin-left: 1.2mm; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 0.55mm 0.6mm; vertical-align: top; border-bottom: 0.2mm solid var(--rule); }
+  tr:last-child td { border-bottom: none; }
+  td.k { white-space: nowrap; width: 1%; padding-right: 1.6mm; }
+  tr.custom td.d::after {
+    content: "★"; color: var(--accent); font-size: 6pt; margin-left: 0.8mm; vertical-align: 0.4mm;
+  }
+  kbd {
+    font-family: "Cica", "DejaVu Sans Mono", monospace;
+    font-size: 7.6pt;
+    background: var(--kbd-bg);
+    border: 0.25mm solid var(--kbd-border);
+    border-bottom-width: 0.5mm;
+    border-radius: 0.8mm;
+    padding: 0 0.9mm;
+    display: inline-block;
+    line-height: 1.35;
+  }
+  kbd.p { background: #fbeae8; border-color: #e3a49d; color: var(--prefix); font-weight: bold; }
+  .plus { color: var(--muted); margin: 0 0.3mm; font-size: 6.5pt; }
+  code {
+    font-family: "Cica", "DejaVu Sans Mono", monospace;
+    font-size: 7.6pt;
+  }
+  .note {
+    font-size: 6.8pt; color: var(--muted); margin: 0.8mm 0 0; padding-left: 0.6mm;
+  }
+  .box {
+    background: var(--accent-soft); border-left: 1mm solid var(--accent);
+    padding: 1.2mm 1.6mm; border-radius: 0.8mm; font-size: 7.2pt;
+  }
+  .box p { margin: 0 0 0.6mm; }
+  .box p:last-child { margin: 0; }
+  .cli td { display: block; border: none; padding: 0 0.6mm; }
+  .cli tr { display: block; border-bottom: 0.2mm solid var(--rule); padding: 0.4mm 0; }
+  .cli tr:last-child { border-bottom: none; }
+  .cli td.k { width: auto; }
+  .cli td.k code { color: var(--accent); }
+  .cli td.d { padding-left: 3mm; color: #333; }
+
+  .pagebreak { break-before: page; }
+  body { font-size: 8pt; line-height: 1.3; }
+  kbd, code { font-size: 7.2pt; }
+  td { padding: 0.4mm 0.5mm; }
+  td.k { padding-right: 1.3mm; }
+  section { margin: 0 0 2mm; }
+  tr.blocked td.d::after {
+    content: "▲"; color: var(--prefix); font-size: 5.6pt; margin-left: 0.8mm; vertical-align: 0.4mm;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>Neovim</span> チートシート <small style="font-size:8pt;color:var(--muted);font-weight:normal">LazyVim 準拠（dot.config/nvim）</small></h1>
+  <div class="legend">
+    <span><kbd class="p">L</kbd> = Leader（<kbd>Space</kbd>）</span>
+    <span><kbd class="p">P</kbd> = WezTerm / tmux の Prefix</span>
+    <span><span style="color:var(--accent)">★</span> 独自設定</span>
+    <span><span style="color:var(--prefix)">▲</span> 端末に取られる</span>
+    <span>無印 = LazyVim 標準</span>
+  </div>
+</header>
+
+<div class="cols">
+
+<section>
+  <h2>基本の考え方</h2>
+  <div class="box">
+    <p><kbd class="p">L</kbd> は Leader（<kbd>Space</kbd>）。押して待つと which-key が候補を表示します。</p>
+    <p>キーの検索は <kbd class="p">L</kbd> <kbd>s</kbd> <kbd>k</kbd>、プラグイン管理は <kbd class="p">L</kbd> <kbd>l</kbd>、追加機能は <code>:LazyExtras</code>。</p>
+    <p>自動整形はオフ（<kbd class="p">L</kbd> <kbd>c</kbd> <kbd>f</kbd> で手動）。相対行番号もオフです。</p>
+  </div>
+</section>
+
+<section>
+  <h2>端末に取られるキー <small>▲ の付いたキー</small></h2>
+  <table>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></td><td class="d">WezTerm / tmux の Prefix。単独なら <kbd class="p">P</kbd> <kbd>Ctrl</kbd>+<kbd>Space</kbd> で届く。WezTerm 内の tmux では <kbd>Ctrl</kbd>+<kbd>Space</kbd> を 4 回</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>b</kbd></td><td class="d">WezTerm / tmux の Prefix。WezTerm 単独なら <kbd class="p">P</kbd> <kbd>Ctrl</kbd>+<kbd>b</kbd> で届く。tmux 内では届かない</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd> <kbd>→</kbd></td><td class="d">WezTerm が単語移動に変換。幅変更は <kbd>Ctrl</kbd>+<kbd>w</kbd> <kbd>&lt;</kbd> <kbd>&gt;</kbd></td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>f</kbd></td><td class="d">WezTerm のフローティングペイン</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>j</kbd> <kbd>k</kbd></td><td class="d">zellij 内ではペイン移動に取られる</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ウィンドウ・タブ</h2>
+  <table>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>h</kbd> <kbd>j</kbd> <kbd>k</kbd> <kbd>l</kbd></td><td class="d">ウィンドウ間を移動</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↑</kbd> <kbd>↓</kbd></td><td class="d">高さを変更</td></tr>
+    <tr class="blocked"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd> <kbd>→</kbd></td><td class="d">幅を変更</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>-</kbd></td><td class="d">下に分割</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>|</kbd></td><td class="d">右に分割</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>w</kbd> <kbd>d</kbd></td><td class="d">ウィンドウを閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>w</kbd> <kbd>m</kbd></td><td class="d">ズーム切替</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>w</kbd></td><td class="d">ウィンドウ操作（<kbd>Ctrl</kbd>+<kbd>w</kbd> と同じ）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>Tab</kbd> <kbd>Tab</kbd></td><td class="d">新規タブ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>Tab</kbd> <kbd>]</kbd> / <kbd class="p">L</kbd> <kbd>Tab</kbd> <kbd>[</kbd></td><td class="d">次 / 前のタブ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>Tab</kbd> <kbd>d</kbd></td><td class="d">タブを閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>Tab</kbd> <kbd>o</kbd></td><td class="d">他のタブを閉じる</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>バッファ</h2>
+  <table>
+    <tr><td class="k"><kbd>H</kbd> / <kbd>L</kbd></td><td class="d">前 / 次のバッファ</td></tr>
+    <tr><td class="k"><kbd>[b</kbd> / <kbd>]b</kbd></td><td class="d">前 / 次のバッファ</td></tr>
+    <tr><td class="k"><kbd>[B</kbd> / <kbd>]B</kbd></td><td class="d">並びを前 / 後ろへ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>b</kbd> / <kbd class="p">L</kbd> <kbd>`</kbd></td><td class="d">直前のバッファ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>,</kbd></td><td class="d">バッファ一覧</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>j</kbd></td><td class="d">選んで移動</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>d</kbd></td><td class="d">閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>D</kbd></td><td class="d">ウィンドウごと閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>o</kbd></td><td class="d">他を閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>l</kbd> / <kbd class="p">L</kbd> <kbd>b</kbd> <kbd>r</kbd></td><td class="d">左 / 右を閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>i</kbd></td><td class="d">非表示のものを閉じる</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>p</kbd></td><td class="d">ピン留め切替</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>b</kbd> <kbd>P</kbd></td><td class="d">ピン留め以外を閉じる</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>編集</h2>
+  <table>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>s</kbd></td><td class="d">保存</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>j</kbd> <kbd>k</kbd></td><td class="d">行・選択範囲を下 / 上へ移動</td></tr>
+    <tr><td class="k"><kbd>gcc</kbd></td><td class="d">行をコメント切替</td></tr>
+    <tr><td class="k"><kbd>gc</kbd></td><td class="d">選択範囲・モーションをコメント切替</td></tr>
+    <tr><td class="k"><kbd>gco</kbd> / <kbd>gcO</kbd></td><td class="d">下 / 上にコメント行を追加</td></tr>
+    <tr><td class="k"><kbd>&lt;</kbd> / <kbd>&gt;</kbd></td><td class="d">ビジュアルでインデント（選択を維持）</td></tr>
+    <tr><td class="k"><kbd>[Space</kbd> / <kbd>]Space</kbd></td><td class="d">上 / 下に空行を追加</td></tr>
+    <tr><td class="k"><kbd>Esc</kbd></td><td class="d">検索ハイライトを消す</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>f</kbd></td><td class="d">整形（ビジュアルは選択範囲）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>f</kbd> / <kbd class="p">L</kbd> <kbd>u</kbd> <kbd>F</kbd></td><td class="d">自動整形切替（全体 / バッファ）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>r</kbd></td><td class="d">検索と置換（grug-far）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>u</kbd></td><td class="d">Undotree</td></tr>
+    <tr class="custom"><td class="k"><kbd>ドラッグ</kbd></td><td class="d">選択をクリップボードへコピー</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ジャンプ <small>flash.nvim</small></h2>
+  <table>
+    <tr><td class="k"><kbd>s</kbd></td><td class="d">文字を入力してジャンプ</td></tr>
+    <tr><td class="k"><kbd>S</kbd></td><td class="d">Treesitter ノードを選択</td></tr>
+    <tr><td class="k"><kbd>r</kbd></td><td class="d">リモート（オペレータ待ち）</td></tr>
+    <tr><td class="k"><kbd>R</kbd></td><td class="d">Treesitter 検索（ビジュアル / オペレータ待ち）</td></tr>
+    <tr class="blocked"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></td><td class="d">選択範囲を Treesitter で拡張</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>s</kbd></td><td class="d">検索中に Flash を切替</td></tr>
+    <tr><td class="k"><kbd>f</kbd> <kbd>F</kbd> <kbd>t</kbd> <kbd>T</kbd></td><td class="d">一文字移動の拡張（<kbd>;</kbd> <kbd>,</kbd> で繰り返し）</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>検索 <small>Snacks Picker</small></h2>
+  <table>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>Space</kbd></td><td class="d">ファイル（プロジェクト）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>F</kbd></td><td class="d">ファイル（cwd）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>g</kbd></td><td class="d">git 管理のファイル</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>r</kbd> / <kbd class="p">L</kbd> <kbd>f</kbd> <kbd>R</kbd></td><td class="d">最近のファイル（全体 / cwd）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>c</kbd></td><td class="d">設定ファイル</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>p</kbd></td><td class="d">プロジェクト</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>n</kbd></td><td class="d">新規ファイル</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>/</kbd></td><td class="d">grep（プロジェクト）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>G</kbd></td><td class="d">grep（cwd）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>w</kbd> / <kbd class="p">L</kbd> <kbd>s</kbd> <kbd>W</kbd></td><td class="d">カーソルの語・選択を grep</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>b</kbd></td><td class="d">バッファ内の行</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>B</kbd></td><td class="d">開いているバッファを grep</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>:</kbd></td><td class="d">コマンド履歴</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>h</kbd></td><td class="d">ヘルプ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>k</kbd></td><td class="d">キーマップ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>C</kbd></td><td class="d">コマンド</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>R</kbd></td><td class="d">前回の検索を再開</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>j</kbd> / <kbd class="p">L</kbd> <kbd>s</kbd> <kbd>m</kbd></td><td class="d">ジャンプ / マーク</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>"</kbd></td><td class="d">レジスタ</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>q</kbd> / <kbd class="p">L</kbd> <kbd>s</kbd> <kbd>l</kbd></td><td class="d">quickfix / location</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Picker 内</h2>
+  <table>
+    <tr><td class="k"><kbd>Enter</kbd></td><td class="d">開く</td></tr>
+    <tr><td class="k"><kbd>Esc</kbd></td><td class="d">閉じる（入力中は 2 回。ノーマルでは <kbd>q</kbd> も）</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>j</kbd> <kbd>k</kbd></td><td class="d">候補を移動</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>u</kbd> <kbd>d</kbd></td><td class="d">候補をスクロール</td></tr>
+    <tr><td class="k"><kbd>Tab</kbd></td><td class="d">複数選択</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>s</kbd> / <kbd>Ctrl</kbd><span class="plus">+</span><kbd>v</kbd></td><td class="d">水平 / 垂直分割で開く</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>t</kbd></td><td class="d">タブで開く</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>q</kbd></td><td class="d">quickfix へ送る</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>f</kbd></td><td class="d">プレビューを下へ</td></tr>
+    <tr class="blocked"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>b</kbd></td><td class="d">プレビューを上へ</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>h</kbd> / <kbd>Alt</kbd><span class="plus">+</span><kbd>i</kbd></td><td class="d">隠し / 無視ファイル切替</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>p</kbd> / <kbd>Alt</kbd><span class="plus">+</span><kbd>m</kbd></td><td class="d">プレビュー / 最大化切替</td></tr>
+    <tr class="blocked"><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>f</kbd></td><td class="d">フォロー切替</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>g</kbd></td><td class="d">ライブ検索切替</td></tr>
+    <tr><td class="k"><kbd>?</kbd></td><td class="d">ヘルプ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>エクスプローラー <small>neo-tree</small></h2>
+  <table>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>e</kbd> / <kbd class="p">L</kbd> <kbd>E</kbd></td><td class="d">開く（プロジェクト / cwd）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>e</kbd> / <kbd class="p">L</kbd> <kbd>b</kbd> <kbd>e</kbd></td><td class="d">git 状態 / バッファ表示</td></tr>
+    <tr><td class="k"><kbd>l</kbd> / <kbd>Enter</kbd></td><td class="d">開く</td></tr>
+    <tr><td class="k"><kbd>h</kbd></td><td class="d">ノードを閉じる</td></tr>
+    <tr><td class="k"><kbd>a</kbd> / <kbd>A</kbd></td><td class="d">ファイル / ディレクトリ作成</td></tr>
+    <tr><td class="k"><kbd>d</kbd></td><td class="d">削除</td></tr>
+    <tr><td class="k"><kbd>r</kbd></td><td class="d">名前を変更</td></tr>
+    <tr><td class="k"><kbd>y</kbd> <kbd>x</kbd> <kbd>p</kbd></td><td class="d">コピー / 切り取り / 貼り付け</td></tr>
+    <tr><td class="k"><kbd>Y</kbd></td><td class="d">パスをコピー</td></tr>
+    <tr><td class="k"><kbd>O</kbd></td><td class="d">システムの既定アプリで開く</td></tr>
+    <tr><td class="k"><kbd>P</kbd></td><td class="d">プレビュー切替</td></tr>
+    <tr><td class="k"><kbd>H</kbd></td><td class="d">隠しファイル切替</td></tr>
+    <tr><td class="k"><kbd>/</kbd></td><td class="d">絞り込み</td></tr>
+    <tr><td class="k"><kbd>s</kbd> / <kbd>S</kbd></td><td class="d">垂直 / 水平分割で開く</td></tr>
+    <tr><td class="k"><kbd>.</kbd> / <kbd>BS</kbd></td><td class="d">ルートに設定 / 親へ</td></tr>
+    <tr><td class="k"><kbd>q</kbd> / <kbd>?</kbd></td><td class="d">閉じる / ヘルプ</td></tr>
+  </table>
+</section>
+
+</div>
+
+<div class="cols pagebreak">
+
+<section>
+  <h2>LSP</h2>
+  <table>
+    <tr><td class="k"><kbd>gd</kbd></td><td class="d">定義へ</td></tr>
+    <tr><td class="k"><kbd>gr</kbd></td><td class="d">参照一覧</td></tr>
+    <tr><td class="k"><kbd>gI</kbd></td><td class="d">実装へ</td></tr>
+    <tr><td class="k"><kbd>gy</kbd></td><td class="d">型定義へ</td></tr>
+    <tr><td class="k"><kbd>gD</kbd></td><td class="d">宣言へ</td></tr>
+    <tr><td class="k"><kbd>K</kbd></td><td class="d">ホバー</td></tr>
+    <tr><td class="k"><kbd>gK</kbd></td><td class="d">シグネチャ</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>k</kbd></td><td class="d">シグネチャ（挿入モード）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>a</kbd></td><td class="d">コードアクション</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>A</kbd></td><td class="d">ソースアクション</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>r</kbd></td><td class="d">名前を変更</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>R</kbd></td><td class="d">ファイル名を変更</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>c</kbd> / <kbd class="p">L</kbd> <kbd>c</kbd> <kbd>C</kbd></td><td class="d">Codelens 実行 / 更新</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>l</kbd></td><td class="d">LSP 情報</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>m</kbd></td><td class="d">Mason</td></tr>
+    <tr><td class="k"><kbd>]]</kbd> / <kbd>[[</kbd></td><td class="d">次 / 前の参照</td></tr>
+    <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>n</kbd> <kbd>p</kbd></td><td class="d">次 / 前の参照（循環）</td></tr>
+  </table>
+  <p class="note">LSP 接続中は <code>gr</code> がすぐ反応するため、Neovim 標準の <code>grn</code> などは使えません。上のキーを使います。<code>gO</code> とビジュアルモードの <code>gra</code> は使えます。</p>
+</section>
+
+<section>
+  <h2>診断・一覧 <small>Trouble / Todo</small></h2>
+  <table>
+    <tr><td class="k"><kbd>]d</kbd> / <kbd>[d</kbd></td><td class="d">次 / 前の診断</td></tr>
+    <tr><td class="k"><kbd>]e</kbd> / <kbd>[e</kbd></td><td class="d">次 / 前のエラー</td></tr>
+    <tr><td class="k"><kbd>]w</kbd> / <kbd>[w</kbd></td><td class="d">次 / 前の警告</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>d</kbd></td><td class="d">行の診断</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>d</kbd> / <kbd class="p">L</kbd> <kbd>s</kbd> <kbd>D</kbd></td><td class="d">診断（全体 / バッファ）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>x</kbd> <kbd>x</kbd> / <kbd class="p">L</kbd> <kbd>x</kbd> <kbd>X</kbd></td><td class="d">Trouble（全体 / バッファ）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>c</kbd> <kbd>s</kbd> / <kbd class="p">L</kbd> <kbd>c</kbd> <kbd>S</kbd></td><td class="d">シンボル / 参照（Trouble）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>x</kbd> <kbd>q</kbd> / <kbd class="p">L</kbd> <kbd>x</kbd> <kbd>l</kbd></td><td class="d">quickfix / location</td></tr>
+    <tr><td class="k"><kbd>]q</kbd> / <kbd>[q</kbd></td><td class="d">次 / 前の項目</td></tr>
+    <tr><td class="k"><kbd>]t</kbd> / <kbd>[t</kbd></td><td class="d">次 / 前の Todo</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>x</kbd> <kbd>t</kbd> / <kbd class="p">L</kbd> <kbd>x</kbd> <kbd>T</kbd></td><td class="d">Todo（Trouble）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>s</kbd> <kbd>t</kbd> / <kbd class="p">L</kbd> <kbd>s</kbd> <kbd>T</kbd></td><td class="d">Todo（Picker）</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Git</h2>
+  <table>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>g</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>G</kbd></td><td class="d">lazygit（プロジェクト / cwd）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>s</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>S</kbd></td><td class="d">status / stash</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>l</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>L</kbd></td><td class="d">log（プロジェクト / cwd）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>f</kbd></td><td class="d">ファイルの履歴</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>b</kbd></td><td class="d">行の blame</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>d</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>D</kbd></td><td class="d">diff（hunk / origin）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>B</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>Y</kbd></td><td class="d">ブラウザで開く / URL をコピー</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>i</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>p</kbd></td><td class="d">GitHub の Issue / PR</td></tr>
+    <tr><td class="k"><kbd>]h</kbd> / <kbd>[h</kbd></td><td class="d">次 / 前の hunk</td></tr>
+    <tr><td class="k"><kbd>]H</kbd> / <kbd>[H</kbd></td><td class="d">最後 / 最初の hunk</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>s</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>r</kbd></td><td class="d">hunk をステージ / リセット</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>S</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>R</kbd></td><td class="d">バッファをステージ / リセット</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>u</kbd></td><td class="d">ステージを取り消す</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>p</kbd></td><td class="d">hunk をプレビュー</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>b</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>B</kbd></td><td class="d">blame（行 / バッファ）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>d</kbd> / <kbd class="p">L</kbd> <kbd>g</kbd> <kbd>h</kbd> <kbd>D</kbd></td><td class="d">diff（インデックス / 直前）</td></tr>
+    <tr><td class="k"><kbd>ih</kbd></td><td class="d">hunk テキストオブジェクト</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>テキストオブジェクト <small>mini.ai + Treesitter</small></h2>
+  <table>
+    <tr><td class="k"><kbd>a</kbd> / <kbd>i</kbd></td><td class="d">外側 / 内側（例 <code>vaf</code> <code>dif</code>）</td></tr>
+    <tr><td class="k"><kbd>f</kbd> <kbd>c</kbd></td><td class="d">関数 / クラス</td></tr>
+    <tr><td class="k"><kbd>o</kbd></td><td class="d">ブロック・条件・ループ</td></tr>
+    <tr><td class="k"><kbd>t</kbd> <kbd>d</kbd></td><td class="d">タグ / 数字</td></tr>
+    <tr><td class="k"><kbd>e</kbd></td><td class="d">単語（Camel / snake）</td></tr>
+    <tr><td class="k"><kbd>g</kbd></td><td class="d">バッファ全体</td></tr>
+    <tr><td class="k"><kbd>u</kbd> <kbd>U</kbd></td><td class="d">関数呼び出し</td></tr>
+    <tr><td class="k"><kbd>q</kbd> <kbd>b</kbd> <kbd>a</kbd></td><td class="d">引用符 / 括弧 / 引数</td></tr>
+    <tr><td class="k"><kbd>an</kbd> <kbd>in</kbd> / <kbd>al</kbd> <kbd>il</kbd></td><td class="d">次 / 前のオブジェクト</td></tr>
+    <tr><td class="k"><kbd>g[</kbd> / <kbd>g]</kbd></td><td class="d">オブジェクトの左 / 右端へ</td></tr>
+    <tr><td class="k"><kbd>]f</kbd> / <kbd>[f</kbd></td><td class="d">次 / 前の関数の先頭</td></tr>
+    <tr><td class="k"><kbd>]c</kbd> / <kbd>[c</kbd></td><td class="d">次 / 前のクラスの先頭</td></tr>
+    <tr><td class="k"><kbd>]a</kbd> / <kbd>[a</kbd></td><td class="d">次 / 前の引数の先頭</td></tr>
+  </table>
+  <p class="note"><kbd>]F</kbd> のように大文字にすると末尾へ移動します。</p>
+</section>
+
+<section>
+  <h2>補完 <small>blink.cmp</small></h2>
+  <table>
+    <tr><td class="k"><kbd>Enter</kbd></td><td class="d">確定</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>y</kbd></td><td class="d">選択して確定</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>n</kbd> <kbd>p</kbd></td><td class="d">候補を移動（<kbd>↑</kbd> <kbd>↓</kbd> も）</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>e</kbd></td><td class="d">キャンセル</td></tr>
+    <tr class="blocked"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></td><td class="d">補完を表示</td></tr>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>f</kbd></td><td class="d">ドキュメントを下へ</td></tr>
+    <tr class="blocked"><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>b</kbd></td><td class="d">ドキュメントを上へ</td></tr>
+    <tr><td class="k"><kbd>Tab</kbd> / <kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></td><td class="d">スニペットの次 / 前へ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>ターミナル</h2>
+  <table>
+    <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>/</kbd></td><td class="d">ターミナル切替（プロジェクト）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>f</kbd> <kbd>t</kbd> / <kbd class="p">L</kbd> <kbd>f</kbd> <kbd>T</kbd></td><td class="d">ターミナル（プロジェクト / cwd）</td></tr>
+    <tr><td class="k"><kbd>Esc</kbd> <kbd>Esc</kbd></td><td class="d">ノーマルモードへ</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>表示切替</h2>
+  <table>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>w</kbd></td><td class="d">折り返し</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>l</kbd> / <kbd class="p">L</kbd> <kbd>u</kbd> <kbd>L</kbd></td><td class="d">行番号 / 相対行番号</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>s</kbd></td><td class="d">スペルチェック</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>d</kbd></td><td class="d">診断</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>h</kbd></td><td class="d">インレイヒント</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>g</kbd></td><td class="d">インデントガイド</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>z</kbd> / <kbd class="p">L</kbd> <kbd>u</kbd> <kbd>Z</kbd></td><td class="d">Zen / ズーム</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>C</kbd></td><td class="d">カラースキーム</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>i</kbd> / <kbd class="p">L</kbd> <kbd>u</kbd> <kbd>I</kbd></td><td class="d">カーソル位置 / 構文木を確認</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>u</kbd> <kbd>r</kbd></td><td class="d">再描画・ハイライト解除</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>n</kbd> / <kbd class="p">L</kbd> <kbd>u</kbd> <kbd>n</kbd></td><td class="d">通知履歴 / 通知を消す</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>セッション・管理</h2>
+  <table>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>q</kbd> <kbd>q</kbd></td><td class="d">すべて終了</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>q</kbd> <kbd>s</kbd> / <kbd class="p">L</kbd> <kbd>q</kbd> <kbd>l</kbd></td><td class="d">セッションを復元（現在 / 直前）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>q</kbd> <kbd>S</kbd></td><td class="d">セッションを選択</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>q</kbd> <kbd>d</kbd></td><td class="d">今回は保存しない</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>l</kbd></td><td class="d">Lazy（プラグイン）</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>L</kbd></td><td class="d">LazyVim の変更履歴</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>.</kbd></td><td class="d">スクラッチバッファ切替</td></tr>
+    <tr><td class="k"><kbd class="p">L</kbd> <kbd>S</kbd></td><td class="d">スクラッチバッファを選択</td></tr>
+  </table>
+</section>
+
+</div>
+</body>
+</html>

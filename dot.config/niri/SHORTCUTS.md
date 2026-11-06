@@ -12,6 +12,8 @@
 - `Mod+D`, `Super+Space`, `Mod+Ctrl+Return` — Noctalia ランチャーを開く
 - `Mod+B` — 選んだブラウザを起動（未選択なら何もしない）
 - `Mod+E` — 選んだファイラーを起動（既定は Nautilus）
+- `Mod+Shift+N` — 主ターミナルで Neovim を起動
+- `Mod+Shift+Ctrl+A` — 主ターミナルで Claude Code を起動（`~/Work` で開始）
 - `Mod+Alt+L` — 画面をロック（Noctalia）
 - `Alt+Ctrl+H` — クリップボード履歴を開く（Noctalia）
 
