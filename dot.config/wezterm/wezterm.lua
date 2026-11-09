@@ -188,7 +188,7 @@ end
 local function split_v() return act.SplitVertical { domain = 'CurrentPaneDomain' } end
 local function split_h() return act.SplitHorizontal { domain = 'CurrentPaneDomain' } end
 
--- prefix (C-Space / C-b) の後に押すキー
+-- prefix (C-Space) の後に押すキー
 local prefix_keys = {
   -- Config and help
   { key = 'q', action = act.ReloadConfiguration },
@@ -249,7 +249,6 @@ local prefix_keys = {
 
   -- prefix 自体を送る
   { key = 'Space', mods = 'CTRL', action = act.SendKey { key = 'Space', mods = 'CTRL' } },
-  { key = 'b', mods = 'CTRL', action = act.SendKey { key = 'b', mods = 'CTRL' } },
   { key = 'Escape', action = act.PopKeyTable },
 }
 for i = 1, 9 do
@@ -338,9 +337,8 @@ local config = {
 
   -- キーバインド設定
   keys = {
-    -- prefix (tmux: prefix C-Space / prefix2 C-b)
+    -- prefix (tmux の prefix C-Space と同じ。C-b はシェルや nvim に渡す)
     { key = 'Space', mods = 'CTRL', action = prefix },
-    { key = 'b', mods = 'CTRL', action = prefix },
 
     -- Pane Controls (prefix なし)
     { key = 'f', mods = 'ALT', action = act.ToggleFloatingPane },
