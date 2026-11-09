@@ -35,7 +35,7 @@ window-rule {
     match app-id=r#"^(Alacritty(-autostart)?|org\.wezfurlong\.wezterm|Hyper)$"#
     draw-border-with-background false
     open-maximized false
-    default-column-width { proportion 0.55556; }
+    default-column-width { proportion 0.77778; }
 }
 
 // Firefox: open Picture-in-Picture as floating
@@ -95,13 +95,7 @@ window-rule {
 // Slack: open at 50% width
 window-rule {
     match app-id=r#"^slack$"#
-    default-column-width { proportion 0.66667; }
-}
-
-// Title: "ドラゴンクエストＸ　オンライン・・・
-window-rule {
-    match app-id=r#"^steam_"# title=r#"^ドラゴンクエストＸ"#
-    open-floating true
+    default-column-width { proportion 0.77778; }
 }
 
 // Screensaver (Noctalia idle → 主ターミナルを app-id screensaver で開いて cmatrix)
