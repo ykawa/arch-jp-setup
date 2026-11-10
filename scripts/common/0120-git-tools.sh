@@ -1,10 +1,11 @@
 #!/bin/bash
-# Git 関連ツール
-# @group: Git ツール (gh / tea / lazygit / hunk)
+# Git・CI 関連ツール
+# @group: Git・CI ツール (gh / tea / lazygit / hunk / circleci)
 # @item: github-cli GitHub CLI (gh)
 # @item: tea Gitea CLI
 # @item: lazygit Git の TUI
 # @item: hunk-bin diff ビューア
+# @item: circleci-cli-bin CircleCI CLI
 set -e
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
