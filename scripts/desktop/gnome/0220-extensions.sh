@@ -24,6 +24,10 @@ gext install advanced-alt-tab@G-dH.github.com
 gext install dash-to-panel@jderose9.github.com
 gext enable dash-to-panel@jderose9.github.com
 gext install clipboard-history@alexsaveau.dev
+# ウィンドウの一覧取得・アクティブ化を D-Bus (org.gnome.Shell.Extensions.Windows) で公開する。
+# Wayland の GNOME では外部からウィンドウをアクティブにする手段がほかにないため、
+# 通知クリックで元の端末に戻るスクリプトなどから使う
+gext install window-calls@domandoman.xyz
 
 find ~/.local/share/gnome-shell/extensions/ -type f -print0 | grep --null-data -E '\.gschema\.xml$' | sudo xargs -0 cp -vt /usr/share/glib-2.0/schemas/
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
