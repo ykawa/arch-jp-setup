@@ -17,37 +17,8 @@ HISTSIZE=100000
 HISTFILESIZE=100000
 HISTIGNORE='ls:pwd:exit'
 
-case "$TERM" in
-  screen*)
-    PROMPT_COMMAND='history -a; history -c; history -r; printf "\033k\033\134\033k%s\033\134" "${PWD/#$HOME/\~}"'
-    show_command_in_title_bar()
-    {
-      case "$BASH_COMMAND" in
-        echo*|history*|printf*|LS_COLORS*)
-          ;;
-        *)
-          printf "\033k\033\134\033k\$ %s\033\134" "${BASH_COMMAND}"
-          ;;
-      esac
-    }
-    trap show_command_in_title_bar DEBUG
-    ;;
-  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-    PROMPT_COMMAND='history -a; history -c; history -r; printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    show_command_in_title_bar()
-    {
-      case "$BASH_COMMAND" in
-        echo*|history*|screen*)
-          ;;
-        *)
-          printf "\033]0;%s\007" "${BASH_COMMAND}"
-          ;;
-      esac
-    }
-    trap show_command_in_title_bar DEBUG
-    ;;
-  *) ;;
-esac
+# ウィンドウタイトルの設定は zoxide 等のフック登録後に行う (ファイル末尾参照)
+PROMPT_COMMAND='history -a; history -c; history -r'
 
 # Fallback to basic prompt if bash-it is not available
 short_host_name() {
@@ -366,3 +337,58 @@ if [ -n "$WEZTERM_EXECUTABLE" ] 2>/dev/null; then
   fi
 fi
 
+# -------------------------------------------
+# ターミナルタイトル (zsh の termtitle と同じ表示)
+#   待機中: user@host: ~/dir
+#   実行中: コマンドライン [user@host: ~/dir]
+# PROMPT_COMMAND 内の関数 (__zoxide_hook 等) や補完・bind -x で
+# DEBUG trap が発火してもタイトルを書き換えないよう、
+# プロンプト表示後の最初の 1 回だけ反映する。
+# 他のフックより後に実行されるよう、必ずファイル末尾で登録すること。
+# -------------------------------------------
+case "$TERM" in
+  screen*)
+    __termtitle_set() { printf '\033k%s\033\\' "$1"; }
+    ;;
+  xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty*|tmux*|foot*|kitty*|wezterm*|st|st-*)
+    __termtitle_set() { printf '\033]0;%s\007' "$1"; }
+    ;;
+esac
+
+if declare -F __termtitle_set >/dev/null; then
+  __termtitle_ready=
+  __termtitle_last_hist=
+
+  __termtitle_location() {
+    printf '%s@%s: %s' "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
+  }
+
+  __termtitle_precmd() {
+    __termtitle_set "$(__termtitle_location)"
+    __termtitle_last_hist=$(HISTTIMEFORMAT= builtin history 1)
+    __termtitle_ready=1
+  }
+
+  __termtitle_preexec() {
+    [ -n "${__termtitle_ready}" ] || return 0
+    # 補完関数・bind -x (fzf 等) の実行中は無視
+    [ -n "${COMP_LINE-}" ] && return 0
+    [ -n "${READLINE_LINE+x}" ] && return 0
+    __termtitle_ready=
+
+    local cmd hist
+    hist=$(HISTTIMEFORMAT= builtin history 1)
+    if [ -n "${hist}" ] && [ "${hist}" != "${__termtitle_last_hist}" ]; then
+      # 履歴番号を除いたコマンドライン全体
+      cmd=$(printf '%s' "${hist}" | sed -E '1s/^ *[0-9]+\*? +//')
+      cmd=${cmd//$'\n'/ }
+    else
+      # 履歴に残らないコマンド (先頭スペース・重複等) は実行中の単純コマンド
+      cmd=${BASH_COMMAND}
+    fi
+    __termtitle_set "${cmd} [$(__termtitle_location)]"
+  }
+
+  PROMPT_COMMAND+=(__termtitle_precmd)
+  trap '__termtitle_preexec' DEBUG
+fi
