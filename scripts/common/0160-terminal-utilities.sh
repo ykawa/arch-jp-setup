@@ -27,6 +27,7 @@ paru -S --needed --noconfirm \
     pastel \
     cfonts \
     fastfetch \
+    code2prompt-bin \
     || true
 
 echo ""
