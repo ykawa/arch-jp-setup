@@ -40,7 +40,8 @@ bash ~/.local/share/arch-jp-setup/scripts/tools/writeback.sh ~/Projects/arch-jp-
 | --- | --- |
 | `bash scripts/link-configs.sh` | `~/.local/share/arch-jp-setup` へコピーし直して dotfiles を張り直す（`setup.sh` は実行しない） |
 | `bash ~/.local/share/arch-jp-setup/scripts/tools/writeback.sh <作業ディレクトリ>` | コピー側で編集した内容を git の作業ディレクトリへ書き戻す（書き戻し先に未コミットの変更があれば中止） |
-| `bash scripts/tools/check-private.sh <ファイル>...` | 個人情報（`/home/<ユーザー>`、ユーザー名、`~/.config/arch-jp-setup/private-words` の語）が含まれていないか検査する |
+| `bash scripts/tools/check-private.sh [<ファイル>...]` | 個人情報（`/home/<ユーザー>`、ユーザー名、`~/.config/arch-jp-setup/private-words` の語）を検査する。引数なしではリポジトリ全体（追跡済み＋ gitignore 対象外の未追跡ファイル）が対象 |
+| `bash scripts/tools/check-private.sh --staged [<ファイル>...]` | ステージ済みの内容を検査する。ファイル指定なしではステージ済みの変更ファイルが対象 |
 | `sudo bash scripts/tools/setup-br0.sh [<インターフェース>]` | 有線 LAN の上に libvirt 用のブリッジ `br0` を作る |
 | `sudo bash scripts/tools/teardown-br0.sh [--dry-run]` | `br0` を消して有線 LAN の直接接続に戻す |
 | `sudo bash scripts/tools/fix-br0.sh [--dry-run\|--undo]` | VM 起動時にホストのネットワークが切れるなど、`br0` の不具合をまとめて直す |

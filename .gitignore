@@ -3,3 +3,8 @@
 
 # 上流設定のスナップショット（手元での比較用、リポジトリでは管理しない）
 /references/
+
+# AI
+CLAUDE.md
+AGENTS.md
+

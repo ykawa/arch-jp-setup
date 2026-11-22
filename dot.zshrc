@@ -288,20 +288,6 @@ if [[ $IS_LINUX -eq 1 ]]; then
 fi
 
 # =============================================================================
-# VCS/Git Configuration
-# =============================================================================
-
-autoload -Uz vcs_info
-setopt prompt_subst
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
-zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
-zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
-zstyle ':vcs_info:*' actionformats '[%b|%a]'
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' use-simple true
-
-# =============================================================================
 # Terminal Integration
 # =============================================================================
 
@@ -630,7 +616,6 @@ hs() {
 # Custom precmd and preexec functions
 custom_precmd() {
   termtitle precmd
-  vcs_info
 }
 
 custom_preexec() {
@@ -668,9 +653,6 @@ periodic() {
     fi
   fi
 }
-
-# Set prompt
-PROMPT='[%1~]${vcs_info_msg_0_}'$'\n[%n@%m]$ '
 
 # =============================================================================
 # zoxide config
