@@ -1,7 +1,9 @@
 #!/bin/bash
 # 公開リポジトリに入れてはいけない PC 固有の情報が含まれていないか検査する
 #
+#   bash check-private.sh                        リポジトリ全体を検査（gitignore 対象は除外）
 #   bash check-private.sh <ファイル>...            作業ツリーのファイルを検査
+#   bash check-private.sh --staged                ステージ済みの変更ファイルを検査
 #   bash check-private.sh --staged <ファイル>...   git のステージ済み内容を検査（pre-commit 用）
 #
 # 検出するもの:
@@ -19,9 +21,24 @@ PRIVATE_WORDS_FILE="$HOME/.config/arch-jp-setup/private-words"
 ALLOW_REGEX='(github\.com|githubusercontent\.com)/[A-Za-z0-9-]+/arch-jp-setup|users\.noreply\.github\.com|private-check: allow'
 
 staged=false
-if [ "$1" = "--staged" ]; then
+if [ "${1:-}" = "--staged" ]; then
     staged=true
     shift
+fi
+
+if [ "$#" -eq 0 ]; then
+    if ! repo_root=$(git rev-parse --show-toplevel 2>/dev/null); then
+        echo "リポジトリ全体を検査するには、Git リポジトリ内で実行してください。" >&2
+        exit 1
+    fi
+    cd "$repo_root"
+    if $staged; then
+        mapfile -d '' files < <(git diff --cached --name-only --diff-filter=ACMR -z)
+    else
+        # 未追跡ファイルも含める。空白や改行を含むファイル名は NUL 区切りで扱う。
+        mapfile -d '' files < <(git ls-files --cached --others --exclude-standard --deduplicate -z)
+    fi
+    set -- "${files[@]}"
 fi
 
 patterns=('/home/[A-Za-z0-9._-]+')
