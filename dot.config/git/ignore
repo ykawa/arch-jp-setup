@@ -219,19 +219,11 @@ thumb
 # devcontainer
 .devcontainer/
 
-# Claude Code specific
-CLAUDE.md
-.claude
-
-# gemini cli specific
-GEMINI.md
-
 # cursor specific
 .cursorrules
 
-# codex specific
-AGENTS.md
 
 # Zed editor
 .zed/
 
+**/.claude/settings.local.json

@@ -7,6 +7,7 @@
 format = """
 [░▒▓](#7aa2f7)\
 [ 🐧 ](bg:#7aa2f7 fg:#1a1b26)\
+${env_var.WORK_MODE}\
 $hostname\
 [](bg:#292e42 fg:#7aa2f7)\
 $directory\
@@ -18,6 +19,9 @@ $rust\
 $haskell\
 [ ](fg:#16161e)\
 \n$character"""
+
+[env_var.WORK_MODE]
+format = '[ WORK ](bold bg:#f7768e fg:#1a1b26)'
 
 [character]
 success_symbol = '\$(fg:#9ece6a)'

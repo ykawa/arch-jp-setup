@@ -35,7 +35,7 @@ window-rule {
     match app-id=r#"^(Alacritty(-autostart)?|org\.wezfurlong\.wezterm|Hyper)$"#
     draw-border-with-background false
     open-maximized false
-    default-column-width { proportion 0.77778; }
+    default-column-width { proportion 0.5; }
 }
 
 // Firefox: open Picture-in-Picture as floating
@@ -60,26 +60,6 @@ window-rule {
     default-floating-position x=280 y=80 relative-to="bottom-left"
 }
 
-// JetBrains IntelliJ IDEA: maximize on open
-window-rule {
-    match app-id=r#"jetbrains-idea"#
-    open-maximized true
-}
-
-window-rule {
-    match app-id=r#"jetbrains-idea"# title=r#"^Merge Revisons for "#
-    default-column-width { proportion 1.00000; }
-}
-
-// mpv: floating, bottom-left position
-window-rule {
-    match app-id=r#"mpv"#
-    // open-floating true
-    // default-floating-position x=80 y=80 relative-to="bottom-left"
-    default-column-width {}
-}
-
-// virt-manager: QEMU/KVM windows take natural width
 window-rule {
     match app-id=r#"virt-manager"# title=r#"^QEMU/KVM .*$"#
     default-column-width {}
@@ -95,7 +75,7 @@ window-rule {
 // Slack: open at 50% width
 window-rule {
     match app-id=r#"^slack$"#
-    default-column-width { proportion 0.77778; }
+    default-column-width { proportion 0.5; }
 }
 
 // Screensaver (Noctalia idle → 主ターミナルを app-id screensaver で開いて cmatrix)
@@ -110,6 +90,6 @@ window-rule {
     match title="^Floating Window - Show Me The Key$"
     open-floating true
     open-focused false
-    default-floating-position x=0 y=40 relative-to="bottom"
+    default-floating-position x=0 y=80 relative-to="bottom"
     geometry-corner-radius 0
 }
