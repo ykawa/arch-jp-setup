@@ -22,7 +22,7 @@ if [ "$REPO_ROOT" = "$INSTALL_DIR" ]; then
 fi
 
 # dot.config/<name> → ~/.config/<name>
-# mozc は 0190-fcitx5-base-setup.sh が cp で処理するためスキップ
+# mozc の設定は 0190-fcitx5-base-setup.sh が書き込むためスキップ
 for item in "$REPO_ROOT/dot.config/"*; do
     [ -e "$item" ] || continue
     name="$(basename "$item")"
