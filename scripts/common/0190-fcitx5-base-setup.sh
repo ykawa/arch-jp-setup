@@ -126,23 +126,17 @@ EOF
 chmod 644 "$CONFIG_DIR/profile" "$CONFIG_DIR/config" "$CONFIG_DIR/conf/mozc.conf" "$CONFIG_DIR/conf/xim.conf"
 echo ""
 
-# Step 4: Mozc設定データベース
-echo "Step 4: Copying Mozc configuration database..."
+# Step 4: Mozc のキーマップ
+# lib/mozc-keymap.txt を config1.db に書き込む。既存の config1.db のほかの設定は残す。
+# 110=5 は候補の数（suggestions_size）で、未設定のときだけ書く
+echo "Step 4: Importing Mozc keymap..."
 MOZC_CONFIG_DIR="$HOME/.config/mozc"
 mkdir -p "$MOZC_CONFIG_DIR"
-
-SOURCE_MOZC_CONFIG="$REPO_ROOT/dot.config/mozc/config1.db"
-if [ -f "$SOURCE_MOZC_CONFIG" ]; then
-    # シンボリックリンクが存在する場合は削除してから実ファイルをコピー
-    if [ -L "$MOZC_CONFIG_DIR/config1.db" ]; then
-        rm "$MOZC_CONFIG_DIR/config1.db"
-    fi
-    cp "$SOURCE_MOZC_CONFIG" "$MOZC_CONFIG_DIR/config1.db"
-    chmod 644 "$MOZC_CONFIG_DIR/config1.db"
-    echo "Mozc configuration database copied"
-else
-    echo "Warning: Source Mozc config1.db not found at $SOURCE_MOZC_CONFIG"
-fi
+python3 -I "$REPO_ROOT/lib/mozc-keymap.py" import \
+    "$REPO_ROOT/lib/mozc-keymap.txt" "$MOZC_CONFIG_DIR/config1.db" 110=5 \
+    || echo "WARNING: Mozc keymap could not be imported"
+# 起動中のサーバーは古い設定を持っているので止める（次の入力で自動で起動する）
+pkill -f '^/usr/lib/mozc/mozc_server' || true
 echo ""
 
 # Step 5: autostart設定
