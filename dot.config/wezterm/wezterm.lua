@@ -220,6 +220,14 @@ local prefix_keys = {
     end
   end) },
 
+  -- アクティブな pane のディレクトリを xdg-open で開く
+  { key = 'O', mods = 'SHIFT', action = wezterm.action_callback(function(window, pane)
+    local cwd = pane:get_current_working_dir()
+    if cwd then
+      wezterm.background_child_process { 'xdg-open', cwd.file_path }
+    end
+  end) },
+
   -- Window (= tab)
   { key = 'r', action = prompt('Rename window', function(window, pane, line) window:active_tab():set_title(line) end) },
   { key = 'c', action = act.SpawnTab 'CurrentPaneDomain' },
